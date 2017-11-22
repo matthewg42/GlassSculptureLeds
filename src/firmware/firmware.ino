@@ -9,23 +9,29 @@
 #include "Button.h"
 #include "StripEffect.h"
 #include "FlipFlop.h"
+#include "Chase.h"
 #include "Config.h"
 
 Heartbeat HeartBeat(HeartbeatPin);
 uint16_t pos = 0;
 CRGB LedData[LedCount];
 CRGB BufA[LedCount];
+CRGB BufB[LedCount];
 uint32_t LastLedUpdate = 0;
-StripEffect* Effect = NULL;
-CRGB ColorScheme[] = { CRGB::Red, CRGB::Yellow };
+StripEffect* EffectA = NULL;
+StripEffect* EffectB = NULL;
+CRGB RedColorScheme[] = { CRGB::Red, CRGB::Green };
+CRGB BlueColorScheme[] = { CRGB::Black, CRGB::Blue };
 
-void ledClear(CRGB* dest, uint16_t count) {
+void ledClear(CRGB* dest, uint16_t count) 
+{
     for(uint16_t i=0; i<count; i++) {
         dest[i] = CRGB::Black;
     }
 }
 
-void mixAdd(CRGB* src, CRGB* dest, uint16_t count) {
+void mixAdd(CRGB* src, CRGB* dest, uint16_t count) 
+{
     for(uint16_t i=0; i<count; i++) {
         dest[i] += src[i];
     }
@@ -46,7 +52,8 @@ void setup()
     Button.begin();
     HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    Effect = new FlipFlop(BufA, LedCount, 1000, ColorScheme, 2);
+    EffectA = new FlipFlop(BufA, LedCount, 2000, RedColorScheme, 2);
+    EffectB = new Chase(BufB, LedCount, BlueColorScheme, 2, 30, 300);
     DBLN(F("E:setup"));
 }
 
@@ -56,10 +63,15 @@ void loop()
     HeartBeat.update();
 
     ledClear(LedData, LedCount);
-    if (Effect) { 
-        Effect->render(); 
+    if (EffectA) { 
+        EffectA->render(); 
         mixAdd(BufA, LedData, LedCount);
     }
+    if (EffectB) { 
+        EffectB->render(); 
+        mixAdd(BufB, LedData, LedCount);
+    }
     ledUpdate();
+    delay(LedRefreshMs);
 }
 

@@ -11,8 +11,8 @@ protected:
     CRGB* _colors;
     uint16_t _numColors;
     uint16_t _periodMs;
-    uint8_t _flipIndex;
-    uint32_t _lastFlip;
+    uint32_t _lastColorChange;
+    uint16_t _colorIndex;
 
 };
 

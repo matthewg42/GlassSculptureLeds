@@ -7,21 +7,21 @@ FlipFlop::FlipFlop(CRGB* ledData, uint16_t numLeds, uint16_t periodMs, CRGB* col
     _colors(colors), 
     _numColors(numColors),
     _periodMs(periodMs),
-    _flipIndex(0),
-    _lastFlip(0)
+    _lastColorChange(0),
+    _colorIndex(0)
 {
 }
 
 void FlipFlop::render()
 {
-    if (Millis() > _lastFlip + _periodMs) {
-        _lastFlip = Millis();
-        _flipIndex = (_flipIndex + 1) % _numColors;
+    if (Millis() > _lastColorChange + _periodMs) {
+        _lastColorChange = Millis();
+        _colorIndex = (_colorIndex + 1) % _numColors;
     }
 
     for(uint16_t i=0; i<_numLeds; i++)
     {
-        _ledData[i] = _colors[_flipIndex];
+        _ledData[i] = _colors[_colorIndex];
     }
 }
 
