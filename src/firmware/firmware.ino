@@ -38,7 +38,6 @@ void setup()
     HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
     Effect = new FlipFlop(LedData, LedCount, 1000, ColorScheme, 2);
-    Effect->fadeIn(5000);
     DBLN(F("E:setup"));
 }
 
