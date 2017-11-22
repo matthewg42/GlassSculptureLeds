@@ -1,6 +1,7 @@
 #include <math.h>
 #include <Arduino.h>
 #include <MutilaDebug.h>
+#include <Millis.h>
 #include <DebouncedButton.h>
 #include <DualButton.h>
 #include <FastLED.h>
@@ -9,6 +10,16 @@
 
 uint16_t pos = 0;
 CRGB LedData[LedCount];
+uint32_t LastLedUpdate = 0;
+
+void ledUpdate()
+{
+    if (LastLedUpdate == 0 || Millis() > LastLedUpdate + LedRefreshMs) {
+        FastLED.show();
+        addMillisOffset(LedCount*0.0215);
+        LastLedUpdate = Millis();
+    }
+}
 
 void setup()
 {
@@ -23,7 +34,7 @@ void loop()
     Button.update();
 
     if (Button.repeat(10, 10)) {
-        DB(millis());
+        DB(Millis());
         DBLN(F(" Poink!"));
         if (pos < LedCount) {
             LedData[pos] = CRGB::Red;
@@ -33,6 +44,6 @@ void loop()
         pos = (pos + 1) % (LedCount * 2);
     }
 
-    FastLED.show();
+    ledUpdate();
 }
 
