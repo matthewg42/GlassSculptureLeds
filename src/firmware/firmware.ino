@@ -20,8 +20,8 @@ CRGB BufB[LedCount];
 uint32_t LastLedUpdate = 0;
 StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
-CRGB RedColorScheme[] = { CRGB::Red, CRGB::Green };
-CRGB BlueColorScheme[] = { CRGB::Black, CRGB::Blue };
+CRGB RedColorScheme[] = { CRGB::Red, CRGB::Orange };
+CRGB BlueColorScheme[] = { CRGB::Cyan, CRGB::Blue };
 uint8_t mixAmount = 128;
 
 void ledClear(CRGB* dest, uint16_t count) 
@@ -34,7 +34,7 @@ void ledClear(CRGB* dest, uint16_t count)
 void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale=255) 
 {
     for(uint16_t i=0; i<count; i++) {
-        dest[i] += src[i].nscale8(scale);
+        dest[i] = dest[i].lerp8(src[i], scale);
     }
 }
 
