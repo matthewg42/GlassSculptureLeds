@@ -22,8 +22,10 @@ CRGB BufB[LedCount];
 uint32_t LastLedUpdate = 0;
 StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
-CRGB RedColorScheme[] = { CRGB::Red, CRGB::Green, CRGB::Yellow };
-CRGB BlueColorScheme[] = { CRGB::Cyan, CRGB::Blue, CRGB::Black };
+CRGB RedColorScheme[] = { CRGB::Red, CRGB::LightYellow, CRGB::PaleVioletRed, CRGB::DarkRed, 
+                          CRGB::Yellow, CRGB::MediumVioletRed, CRGB::Orange, CRGB::White };
+CRGB BlueColorScheme[] = { CRGB::DeepSkyBlue, CRGB::Cyan, CRGB::DarkBlue, CRGB::CornflowerBlue, 
+                           CRGB::BlueViolet, CRGB::SteelBlue, CRGB::MidnightBlue, CRGB::LightSteelBlue };
 uint8_t mixAmount = 255;
 
 void ledClear(CRGB* dest, uint16_t count) 
