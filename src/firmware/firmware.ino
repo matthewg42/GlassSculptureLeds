@@ -2,15 +2,21 @@
 #include <Arduino.h>
 #include <MutilaDebug.h>
 #include <Millis.h>
+#include <Heartbeat.h>
 #include <DebouncedButton.h>
 #include <DualButton.h>
 #include <FastLED.h>
 #include "Button.h"
+#include "StripEffect.h"
+#include "FlipFlop.h"
 #include "Config.h"
 
+Heartbeat HeartBeat(HeartbeatPin);
 uint16_t pos = 0;
 CRGB LedData[LedCount];
 uint32_t LastLedUpdate = 0;
+StripEffect* Effect = NULL;
+CRGB ColorScheme[] = { CRGB::Red, CRGB::Yellow };
 
 void ledUpdate()
 {
@@ -25,25 +31,17 @@ void setup()
 {
     Serial.begin(115200);
     Button.begin();
+    HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    DBLN(F("Press button to paint color"));
+    Effect = new FlipFlop(LedData, LedCount, 1000, ColorScheme, 2);
+    DBLN(F("E:setup"));
 }
 
 void loop()
 {
     Button.update();
-
-    if (Button.repeat(10, 10)) {
-        DB(Millis());
-        DBLN(F(" Poink!"));
-        if (pos < LedCount) {
-            LedData[pos] = CRGB::Red;
-        } else {
-            LedData[pos%LedCount] = CRGB::Yellow;
-        }
-        pos = (pos + 1) % (LedCount * 2);
-    }
-
+    HeartBeat.update();
+    if (Effect) Effect->update(); 
     ledUpdate();
 }
 

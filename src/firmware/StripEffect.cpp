@@ -1,11 +1,12 @@
 #include <Millis.h>
 #include "StripEffect.h"
 
-StripEffect::StripEffect(CRGB* ledData, uint16_t updatePeriodMs) :
+StripEffect::StripEffect(CRGB* ledData, uint16_t numLeds, uint16_t updatePeriodMs) :
     _ledData(ledData),
+    _numLeds(numLeds),
     _lastUpdateMs(0),
     _updatePeriodMs(updatePeriodMs),
-    _fadeState(Off),
+    _fadeState(On),
     _fadeStart(0),
     _fadeDurationMs(0)
 {
@@ -24,7 +25,7 @@ void StripEffect::fadeIn(uint16_t durationMs)
 
 void StripEffect::fadeOut(uint16_t durationMs) 
 {
-    _fadeState = In;
+    _fadeState = Out;
     _fadeStart = Millis();
     _fadeDurationMs = durationMs;
 }
@@ -37,9 +38,33 @@ void StripEffect::update()
     }
 }
 
-uint16_t StripEffect::numLeds() 
-{ 
-    return sizeof(_ledData) / sizeof((_ledData)[0]); 
+float StripEffect::fadeRatio()
+{
+    uint32_t since = Millis() - _fadeStart;
+    switch(_fadeState) {
+    case In:
+        if (since >= _fadeDurationMs) { 
+            return 1.0; 
+        } else {
+            return ((float)since) / _fadeDurationMs;
+        }
+        break;
+    case On:
+        return 1.0;
+        break;
+    case Out:
+        if (since >= _fadeDurationMs) { 
+            return 0.0; 
+        } else {
+            return 1.0 - (((float)since) / _fadeDurationMs);
+        }
+        break;
+    case Off:
+        return 0.0;
+        break;
+    default:
+        return 1.0;
+    }
 }
 
 StripEffect::FadeState StripEffect::fadeState()

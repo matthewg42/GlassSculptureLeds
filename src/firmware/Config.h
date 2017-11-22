@@ -14,3 +14,4 @@ const uint8_t       RemoteButtonPin =       5;
 const bool          WiredButtonPullup =     true;
 const bool          RemoteButtonPullup =    true;
 
+const uint8_t       HeartbeatPin =          13;

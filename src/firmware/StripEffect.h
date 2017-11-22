@@ -13,7 +13,7 @@ public:
 
 public:
     /*! Constructor */
-    StripEffect(CRGB* ledData, uint16_t updatePeriodMs=30);
+    StripEffect(CRGB* ledData, uint16_t numLeds, uint16_t updatePeriodMs=30);
     /*! Destructor */
     virtual ~StripEffect();
     /*! Trigger fade in of effect */
@@ -24,8 +24,6 @@ public:
     virtual void update();
     /*! Implement this to draw the effect on the strip */
     virtual void affect() = 0;
-    /*! \return number of Leds in strip */
-    uint16_t numLeds();
     /*! \return a value between 0 and 1 showing how faded the display is. */
     float fadeRatio();
     /*! \return what state we are in with respect to fading */
@@ -33,6 +31,7 @@ public:
 
 protected:
     CRGB* _ledData;
+    uint16_t _numLeds;
     uint32_t _lastUpdateMs;
     uint16_t _updatePeriodMs;
     FadeState _fadeState;   
