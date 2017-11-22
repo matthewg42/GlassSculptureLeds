@@ -9,6 +9,7 @@
 #include "Button.h"
 #include "StripEffect.h"
 #include "FlipFlop.h"
+#include "FadeFlop.h"
 #include "Chase.h"
 #include "Config.h"
 
@@ -20,9 +21,9 @@ CRGB BufB[LedCount];
 uint32_t LastLedUpdate = 0;
 StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
-CRGB RedColorScheme[] = { CRGB::Red, CRGB::Orange };
+CRGB RedColorScheme[] = { CRGB::Red, CRGB::Green };
 CRGB BlueColorScheme[] = { CRGB::Cyan, CRGB::Blue };
-uint8_t mixAmount = 128;
+uint8_t mixAmount = 255;
 
 void ledClear(CRGB* dest, uint16_t count) 
 {
@@ -53,7 +54,7 @@ void setup()
     Button.begin();
     HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    EffectA = new FlipFlop(BufA, LedCount, 2000, RedColorScheme, 2);
+    EffectA = new FadeFlop(BufA, LedCount, 2000, RedColorScheme, 2);
     EffectB = new Chase(BufB, LedCount, BlueColorScheme, 2, 30, 300);
     DBLN(F("E:setup"));
 }
