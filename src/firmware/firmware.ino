@@ -22,6 +22,7 @@ StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
 CRGB RedColorScheme[] = { CRGB::Red, CRGB::Green };
 CRGB BlueColorScheme[] = { CRGB::Black, CRGB::Blue };
+uint8_t mixAmount = 128;
 
 void ledClear(CRGB* dest, uint16_t count) 
 {
@@ -30,10 +31,10 @@ void ledClear(CRGB* dest, uint16_t count)
     }
 }
 
-void mixAdd(CRGB* src, CRGB* dest, uint16_t count) 
+void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale=255) 
 {
     for(uint16_t i=0; i<count; i++) {
-        dest[i] += src[i];
+        dest[i] += src[i].nscale8(scale);
     }
 }
 
@@ -62,14 +63,20 @@ void loop()
     Button.update();
     HeartBeat.update();
 
+    if (Button.repeat(20, 20)) {
+        mixAmount++;
+        DB(F("mixAmount="));
+        DBLN(mixAmount);
+    }
+
     ledClear(LedData, LedCount);
     if (EffectA) { 
         EffectA->render(); 
-        mixAdd(BufA, LedData, LedCount);
+        mixAdd(BufA, LedData, LedCount, mixAmount);
     }
     if (EffectB) { 
         EffectB->render(); 
-        mixAdd(BufB, LedData, LedCount);
+        mixAdd(BufB, LedData, LedCount, 255-mixAmount);
     }
     ledUpdate();
     delay(LedRefreshMs);
