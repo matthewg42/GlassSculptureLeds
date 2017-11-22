@@ -7,7 +7,7 @@
 const uint16_t      LedCount =              48;
 const EOrder        LedOrder =              GRB;
 const uint8_t       LedPin =                4;
-const uint16_t      LedRefreshMs =          30;
+const uint16_t      LedRefreshMs =          10;
 
 const uint8_t       WiredButtonPin =        3;
 const uint8_t       RemoteButtonPin =       5;
