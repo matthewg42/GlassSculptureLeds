@@ -2,12 +2,13 @@
 #include <Arduino.h>
 #include <MutilaDebug.h>
 #include <DebouncedButton.h>
+#include <DualButton.h>
 #include <FastLED.h>
+#include "Button.h"
 #include "Config.h"
 
 uint16_t pos = 0;
 CRGB LedData[LedCount];
-DebouncedButton Button(ButtonPin);
 
 void setup()
 {
@@ -20,7 +21,6 @@ void setup()
 void loop()
 {
     Button.update();
-
 
     if (Button.repeat(10, 10)) {
         DB(millis());
