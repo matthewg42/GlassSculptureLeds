@@ -2,6 +2,9 @@
 
 #include "StripEffect.h"
 
+/*! \class Chase
+ * LED StripEffect which sends colors along the strip in a fixed sequence
+ */
 class Chase : public StripEffect {
 public:
     Chase(CRGB* ledData, uint16_t numLeds, CRGB* colors, uint16_t numColors, uint16_t shiftPeriodMs=30, uint16_t colorPeriodMs=200);
