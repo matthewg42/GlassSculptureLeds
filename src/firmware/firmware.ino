@@ -14,12 +14,21 @@
 Heartbeat HeartBeat(HeartbeatPin);
 uint16_t pos = 0;
 CRGB LedData[LedCount];
+CRGB BufA[LedCount];
 uint32_t LastLedUpdate = 0;
 StripEffect* Effect = NULL;
 CRGB ColorScheme[] = { CRGB::Red, CRGB::Yellow };
 
-void ledClear() {
-    FastLED.clear();
+void ledClear(CRGB* dest, uint16_t count) {
+    for(uint16_t i=0; i<count; i++) {
+        dest[i] = CRGB::Black;
+    }
+}
+
+void mixAdd(CRGB* src, CRGB* dest, uint16_t count) {
+    for(uint16_t i=0; i<count; i++) {
+        dest[i] += src[i];
+    }
 }
 
 void ledUpdate()
@@ -37,7 +46,7 @@ void setup()
     Button.begin();
     HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    Effect = new FlipFlop(LedData, LedCount, 1000, ColorScheme, 2);
+    Effect = new FlipFlop(BufA, LedCount, 1000, ColorScheme, 2);
     DBLN(F("E:setup"));
 }
 
@@ -46,8 +55,11 @@ void loop()
     Button.update();
     HeartBeat.update();
 
-    ledClear();
-    if (Effect) Effect->render(); 
+    ledClear(LedData, LedCount);
+    if (Effect) { 
+        Effect->render(); 
+        mixAdd(BufA, LedData, LedCount);
+    }
     ledUpdate();
 }
 

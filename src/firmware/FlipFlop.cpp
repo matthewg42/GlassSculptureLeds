@@ -21,7 +21,7 @@ void FlipFlop::render()
 
     for(uint16_t i=0; i<_numLeds; i++)
     {
-        _ledData[i] += _colors[_flipIndex];
+        _ledData[i] = _colors[_flipIndex];
     }
 }
 
