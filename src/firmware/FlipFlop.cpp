@@ -3,24 +3,25 @@
 #include "FlipFlop.h"
 
 FlipFlop::FlipFlop(CRGB* ledData, uint16_t numLeds, uint16_t periodMs, CRGB* colors, uint16_t numColors) :
-    StripEffect(ledData, numLeds, periodMs),
+    StripEffect(ledData, numLeds),
     _colors(colors), 
     _numColors(numColors),
-    _flipIndex(0)
+    _periodMs(periodMs),
+    _flipIndex(0),
+    _lastFlip(0)
 {
 }
 
-void FlipFlop::affect()
+void FlipFlop::render()
 {
-    DB(F("FlipFlop::affect, leds="));
-    DB(_numLeds);
-    DB(F(" colors="));
-    DBLN(_numColors);
-    
+    if (Millis() > _lastFlip + _periodMs) {
+        _lastFlip = Millis();
+        _flipIndex = (_flipIndex + 1) % _numColors;
+    }
+
     for(uint16_t i=0; i<_numLeds; i++)
     {
-        _ledData[i] = _colors[_flipIndex];
+        _ledData[i] += _colors[_flipIndex];
     }
-    _flipIndex = (_flipIndex + 1) % _numColors;
 }
 

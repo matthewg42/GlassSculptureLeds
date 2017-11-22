@@ -18,6 +18,10 @@ uint32_t LastLedUpdate = 0;
 StripEffect* Effect = NULL;
 CRGB ColorScheme[] = { CRGB::Red, CRGB::Yellow };
 
+void ledClear() {
+    FastLED.clear();
+}
+
 void ledUpdate()
 {
     if (LastLedUpdate == 0 || Millis() > LastLedUpdate + LedRefreshMs) {
@@ -34,6 +38,7 @@ void setup()
     HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
     Effect = new FlipFlop(LedData, LedCount, 1000, ColorScheme, 2);
+    Effect->fadeIn(5000);
     DBLN(F("E:setup"));
 }
 
@@ -41,7 +46,9 @@ void loop()
 {
     Button.update();
     HeartBeat.update();
-    if (Effect) Effect->update(); 
+
+    ledClear();
+    if (Effect) Effect->render(); 
     ledUpdate();
 }
 

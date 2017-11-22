@@ -5,7 +5,7 @@
 class FlipFlop : public StripEffect {
 public:
     FlipFlop(CRGB* ledData, uint16_t numLeds, uint16_t periodMs, CRGB* colors, uint16_t numColors);
-    void affect();
+    void render();
 
 protected:
     CRGB* _colors;
