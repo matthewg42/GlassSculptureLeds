@@ -1,3 +1,4 @@
+#include <Millis.h>
 #include "StripEffect.h"
 
 StripEffect::StripEffect(CRGB* ledData, uint16_t updatePeriodMs) :
@@ -17,19 +18,23 @@ StripEffect::~StripEffect()
 void StripEffect::fadeIn(uint16_t durationMs) 
 {
     _fadeState = In;
-    _fadeStart = millis();
+    _fadeStart = Millis();
     _fadeDurationMs = durationMs;
 }
 
 void StripEffect::fadeOut(uint16_t durationMs) 
 {
     _fadeState = In;
-    _fadeStart = millis();
+    _fadeStart = Millis();
     _fadeDurationMs = durationMs;
 }
 
 void StripEffect::update()
 {
+    if (Millis() > _lastUpdateMs + _updatePeriodMs) {
+        affect();
+        _lastUpdateMs = Millis();
+    }
 }
 
 uint16_t StripEffect::numLeds() 

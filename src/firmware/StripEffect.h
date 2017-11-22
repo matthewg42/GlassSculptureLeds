@@ -23,7 +23,7 @@ public:
     /*! Call this regularly from your code */
     virtual void update();
     /*! Implement this to draw the effect on the strip */
-    virtual void effectUpdate() = 0;
+    virtual void affect() = 0;
     /*! \return number of Leds in strip */
     uint16_t numLeds();
     /*! \return a value between 0 and 1 showing how faded the display is. */
