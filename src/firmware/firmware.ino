@@ -12,6 +12,7 @@
 #include "FadeFlop.h"
 #include "Chase.h"
 #include "FadeChase.h"
+#include "Blobs.h"
 #include "Config.h"
 
 Heartbeat HeartBeat(HeartbeatPin);
@@ -57,8 +58,9 @@ void setup()
     Button.begin();
     HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    EffectA = new FadeFlop(BufA, LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    EffectB = new FadeChase(BufB, LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    EffectA = new Blobs(BufA, LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    //EffectA = new FadeFlop(BufA, LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    // EffectB = new FadeChase(BufB, LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     DBLN(F("E:setup"));
 }
 
