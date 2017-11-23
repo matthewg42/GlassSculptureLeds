@@ -3,16 +3,16 @@
 #include <FastLED.h>
 #include "Effect.h"
 
-/*! \class Chase
+/*! \class EffChase
  * LED Effect which sends colors along the strip in a fixed sequence
  */
-class Chase : public Effect {
+class EffChase : public Effect {
 public:
     static const uint16_t ShiftPeriodMs = 30;
     static const uint8_t ColorLengthPixels = 10;
 
 public:
-    Chase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
+    EffChase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
     void render();
 
 protected:

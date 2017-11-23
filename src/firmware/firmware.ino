@@ -11,7 +11,7 @@
 #include "SpeedControl.h"
 #include "Effect.h"
 #include "EffSequence.h"
-#include "Chase.h"
+#include "EffChase.h"
 #include "EffBlobs.h"
 #include "Palettes.h"
 #include "Config.h"
@@ -55,7 +55,7 @@ Effect* nextEffect(uint8_t buffer)
         //effect = new EffSequence(Buffers[buffer], PaletteGreen);
         //effect = new EffBlobs(Buffers[buffer], PaletteRed);
     if (EffectIndex==0) {
-        //effect = new Chase(Buffers[buffer], PartyColors_p, false);
+        //effect = new EffChase(Buffers[buffer], PartyColors_p, false);
         DBLN("party fade smooth");
         effect = new EffSequence(Buffers[buffer], PartyColors_p, true);
     } else if (EffectIndex==1) {
@@ -63,13 +63,13 @@ Effect* nextEffect(uint8_t buffer)
         effect = new EffSequence(Buffers[buffer], PartyColors_p, false);
     } else if (EffectIndex==2) {
         DBLN("party smooth");
-        effect = new Chase(Buffers[buffer], PartyColors_p, true);
+        effect = new EffChase(Buffers[buffer], PartyColors_p, true);
     } else if (EffectIndex==3) {
         DBLN("rainbow rough");
-        effect = new Chase(Buffers[buffer], RainbowColors_p, false);
+        effect = new EffChase(Buffers[buffer], RainbowColors_p, false);
     } else if (EffectIndex==4) {
         DBLN("rainbow smooth");
-        effect = new Chase(Buffers[buffer], RainbowColors_p, true);
+        effect = new EffChase(Buffers[buffer], RainbowColors_p, true);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
@@ -184,9 +184,9 @@ void setup()
     BufferState = JustA;
     Effects[0] = nextEffect(0);
     MixAmount = 0;
-    //EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    //EffectB = new EffChase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     //EffectA = new EffSequence(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    //EffectB = new Chase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    //EffectB = new EffChase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
 
     MEMFREE;
     DBLN(F("E:setup"));

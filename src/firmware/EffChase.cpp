@@ -1,20 +1,20 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
 #include "SpeedControl.h"
-#include "Chase.h"
+#include "EffChase.h"
 #include "Config.h"
 
-Chase::Chase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
+EffChase::EffChase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
     Effect(ledData),
     _palette(palette), 
     _smooth(smooth),
     _lastShift(0),
     _hue(0.)
 {
-    DBLN(F("Start Chase"));
+    DBLN(F("Start EffChase"));
 }
 
-void Chase::render()
+void EffChase::render()
 {
     if (Millis() > _lastShift + ((128./SpeedFactor)*ShiftPeriodMs)) {
         _lastShift = Millis();
