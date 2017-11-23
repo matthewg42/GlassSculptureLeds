@@ -11,6 +11,8 @@ struct Blob {
     uint32_t birthMs;           //!< At what time was this blob born? (0 means dormant)
 
     Blob() : birthMs(0) {;}
+    bool isDormant() { return birthMs == 0 || Millis() > birthMs+fadeMs+fadeMs+onMs; }
+    uint32_t ageMs() { return isDormant() ? 0 : Millis() - birthMs; }
 
 };
 
@@ -21,13 +23,14 @@ struct Blob {
  */
 class Blobs : public StripEffect {
 public:
-    static const uint8_t NumberOfBlobs = 5;
+    static const uint8_t NumberOfBlobs = 1;
     static const uint16_t MinSpawnDelayMs = 500;
 
 public:
     Blobs(CRGB* ledData, uint16_t numLeds, CRGB* colors, uint16_t numColors);
     void render();
     void spawn();
+    void renderBlob(Blob& blob);
 
 protected:
     CRGB* _colors;
