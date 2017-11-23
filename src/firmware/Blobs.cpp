@@ -8,6 +8,7 @@ Blobs::Blobs(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, const ui
     _numColors(numColors),
     _lastSpawn(0)
 {
+    DBLN(F("Start Blobs"));
 }
 
 void Blobs::render()
@@ -67,8 +68,6 @@ void Blobs::spawn()
 {
     for (uint8_t i=0; i<NumberOfBlobs; i++) {
         if (_blobs[i].isDormant()) {
-            DB(F("Blobs::render spawning in slot "));
-            DBLN(i);
             _lastSpawn = Millis();
             _blobs[i].birthMs = Millis()+1;             // hack to prevent suppression at Millis() == 0
             _blobs[i].firstPixel = random(_numLeds-1);

@@ -10,6 +10,7 @@ FlipFlop::FlipFlop(CRGB* ledData, uint16_t numLeds, uint16_t periodMs, CRGB* col
     _lastColorChange(0),
     _colorIndex(0)
 {
+    DBLN(F("Start FlipFlop"));
 }
 
 void FlipFlop::render()

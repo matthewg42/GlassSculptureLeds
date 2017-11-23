@@ -7,7 +7,7 @@
  */
 class FadeFlop : public StripEffect {
 public:
-    FadeFlop(CRGB* ledData, uint16_t numLeds, uint16_t periodMs, CRGB* colors, uint16_t numColors);
+    FadeFlop(CRGB* ledData, const uint16_t numLeds, const uint16_t periodMs, const CRGB* colors, const uint16_t numColors);
     void render();
 
 protected:

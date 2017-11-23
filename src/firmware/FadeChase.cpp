@@ -12,6 +12,7 @@ FadeChase::FadeChase(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, 
     _lastColorChange(0),
     _colorIndex(0)
 {
+    DBLN(F("Start FadeChase"));
 }
 
 void FadeChase::render()
@@ -19,8 +20,6 @@ void FadeChase::render()
     if (Millis() > _lastColorChange + _colorPeriodMs) {
         _lastColorChange = Millis();
         _colorIndex = (_colorIndex + 1) % _numColors;
-        DB(F("FadeChase::render color="));
-        DBLN(_colorIndex);
     }
 
     if (Millis() > _lastShift + _shiftPeriodMs) {

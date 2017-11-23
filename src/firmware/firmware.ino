@@ -27,6 +27,9 @@ CRGB LedData[LedCount];     // Mapped onto our LED strip
 // Our two effects (for mixing together)
 StripEffect* Effects[2] = { NULL, NULL };
 
+// Used to keep track of which effect is next
+uint8_t EffectIndex = 0;
+
 typedef enum { None, JustA, JustB, AtoB, BtoA } t_BufferState;
 t_BufferState BufferState = None;
     
@@ -51,23 +54,55 @@ uint8_t Brightness = 0;
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
 
+StripEffect* nextEffect(uint8_t buffer)
+{
+    StripEffect* effect = NULL;
+    switch (EffectIndex) {
+    case 0:
+        effect = new Blobs(Buffers[buffer], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+        break;
+    case 1:
+        effect = new Chase(Buffers[buffer], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+        break;
+    case 2:
+        effect = new FadeFlop(Buffers[buffer], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+        break;
+    default:
+        break;
+    }
 
+    EffectIndex = (EffectIndex+1) % 3;
+    return effect;
+}
 
 void startTransition()
 {
     switch(BufferState) {
     case JustA:
-        DBLN(F("startTransition: starting AtoB"));
+        DB(F("startTransition: starting AtoB "));
+        MEMFREE;
         LastTransitionStart = Millis();
         BufferState = AtoB;
+        if (Effects[1] != NULL) {
+            delete Effects[1];
+            Effects[1] = NULL;
+        }
+        Effects[1] = nextEffect(1);
         break;
     case JustB:
-        DBLN(F("startTransition: starting BtoA"));
+        DB(F("startTransition: starting BtoA "));
+        MEMFREE;
         LastTransitionStart = Millis();
         BufferState = BtoA;
+        if (Effects[0] != NULL) {
+            delete Effects[0];
+            Effects[0] = NULL;
+        }
+        Effects[0] = nextEffect(0);
         break;
     default:
-        DBLN(F("startTransition: already transitioning"));
+        // DBLN(F("startTransition: already transitioning"));
+        break;
     }
 }
 
@@ -80,7 +115,11 @@ void updateTransition()
             MixAmount = 255;
             BufferState = JustB;
             LastTransitionStart = 0;
-            DBLN(F("Transition AtoB complete"));
+            // DBLN(F("Transition AtoB complete"));
+            if (Effects[0] != NULL) {
+                delete Effects[0];
+                Effects[0] = NULL;
+            }
         } else {
             MixAmount = 255 * complete;
         }
@@ -91,7 +130,11 @@ void updateTransition()
             MixAmount = 0;
             BufferState = JustA;
             LastTransitionStart = 0;
-            DBLN(F("Transition BtoA complete"));
+            // DBLN(F("Transition BtoA complete"));
+            if (Effects[1] != NULL) {
+                delete Effects[1];
+                Effects[1] = NULL;
+            }
         } else {
             MixAmount = 255 - (255 * complete);
         }
@@ -133,7 +176,7 @@ void setup()
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
 
     BufferState = JustA;
-    Effects[0] = new Blobs(Buffers[0], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    Effects[0] = nextEffect(0);
     MixAmount = 0;
     //EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     //EffectA = new FadeFlop(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
@@ -150,7 +193,6 @@ void loop()
     updateTransition();
 
     if (Button.tapped()) {
-        DBLN(F("Button press: starting transition"));
         startTransition();
     }
 
