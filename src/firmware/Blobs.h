@@ -9,8 +9,9 @@ struct Blob {
     uint16_t fadeMs;            //!< How many milliseconds we will take to fade in and out
     uint16_t onMs;              //!< How long we will remain full on
     uint32_t birthMs;           //!< At what time was this blob born? (0 means dormant)
+    CRGB color;                 //!< The color of the blob at max brightness
 
-    Blob() : birthMs(0) {;}
+    Blob() : birthMs(0), color(CRGB::White) {;}
     bool isDormant() { return birthMs == 0 || Millis() > birthMs+fadeMs+fadeMs+onMs; }
     uint32_t ageMs() { return isDormant() ? 0 : Millis() - birthMs; }
 
@@ -23,7 +24,7 @@ struct Blob {
  */
 class Blobs : public StripEffect {
 public:
-    static const uint8_t NumberOfBlobs = 1;
+    static const uint8_t NumberOfBlobs = 3;
     static const uint16_t MinSpawnDelayMs = 500;
 
 public:
