@@ -77,6 +77,14 @@ void EffBlobs::spawn()
             _blobs[i].fadeMs = (128./SpeedFactor)*random(100, 2001);
             _blobs[i].onMs = (128./SpeedFactor)*random(300, 1501);
             _blobs[i].color = ColorFromPalette(_palette, random(256));
+            //DB(F("spawn slot="));
+            //DB(i);
+            //DB(F(" 1st="));
+            //DB(_blobs[i].firstPixel);
+            //DB(F(" fadeMs="));
+            //DB(_blobs[i].fadeMs);
+            //DB(F(" onMs="));
+            //DBLN(_blobs[i].onMs);
             return;
         }
     }
