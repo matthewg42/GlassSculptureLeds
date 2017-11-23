@@ -18,25 +18,25 @@ struct Blob {
 
 };
 
-/*! \class Blobs
+/*! \class EffBlobs
  * LED Effect which makes blobs fade in and out at random places along the strip.
  * The edges of the blobs are faded to black, and they wrap around the ends of the strip.
  * Blob colors are chosen randomly from the color scheme provided
  */
-class Blobs : public Effect {
+class EffBlobs : public Effect {
 public:
-    static const uint8_t NumberOfBlobs = 3;
+    static const uint8_t NumberOfEffBlobs = 3;
     static const uint16_t MinSpawnDelayMs = 500;
 
 public:
-    Blobs(CRGB* ledData, const TProgmemRGBPalette16& palette);
+    EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette);
     void render();
     void spawn();
     void renderBlob(Blob& blob);
 
 protected:
     const TProgmemRGBPalette16& _palette;
-    Blob _blobs[NumberOfBlobs];
+    Blob _blobs[NumberOfEffBlobs];
     uint32_t _lastSpawn;
 
 };

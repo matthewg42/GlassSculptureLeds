@@ -1,17 +1,17 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
-#include "Blobs.h"
+#include "EffBlobs.h"
 #include "Config.h"
 
-Blobs::Blobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
+EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
     Effect(ledData),
     _palette(palette),
     _lastSpawn(0)
 {
-    DBLN(F("Start Blobs"));
+    DBLN(F("Start EffBlobs"));
 }
 
-void Blobs::render()
+void EffBlobs::render()
 {
     if (Millis() > _lastSpawn + MinSpawnDelayMs || _lastSpawn == 0) {
         spawn();
@@ -23,12 +23,12 @@ void Blobs::render()
     }
     
     // render blobs in additive way
-    for (uint8_t i=0; i<NumberOfBlobs; i++) {
+    for (uint8_t i=0; i<NumberOfEffBlobs; i++) {
         renderBlob(_blobs[i]);
     }
 }
 
-void Blobs::renderBlob(Blob& blob)
+void EffBlobs::renderBlob(Blob& blob)
 {
     if (!blob.isDormant()) {
         float brightness = 0.;
@@ -64,9 +64,9 @@ void Blobs::renderBlob(Blob& blob)
     }
 }
 
-void Blobs::spawn()
+void EffBlobs::spawn()
 {
-    for (uint8_t i=0; i<NumberOfBlobs; i++) {
+    for (uint8_t i=0; i<NumberOfEffBlobs; i++) {
         if (_blobs[i].isDormant()) {
             _lastSpawn = Millis();
             _blobs[i].birthMs = Millis()+1;             // hack to prevent suppression at Millis() == 0

@@ -12,7 +12,7 @@
 #include "Effect.h"
 #include "Sequence.h"
 #include "Chase.h"
-#include "Blobs.h"
+#include "EffBlobs.h"
 #include "Palettes.h"
 #include "Config.h"
 
@@ -53,7 +53,7 @@ Effect* nextEffect(uint8_t buffer)
 
 
         //effect = new Sequence(Buffers[buffer], PaletteGreen);
-        //effect = new Blobs(Buffers[buffer], PaletteRed);
+        //effect = new EffBlobs(Buffers[buffer], PaletteRed);
     if (EffectIndex==0) {
         //effect = new Chase(Buffers[buffer], PartyColors_p, false);
         DBLN("party fade smooth");
