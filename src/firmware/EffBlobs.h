@@ -25,7 +25,7 @@ struct Blob {
  */
 class EffBlobs : public Effect {
 public:
-    static const uint8_t NumberOfEffBlobs = 3;
+    static const uint8_t NumberOfEffBlobs = 5;
     static const uint16_t MinSpawnDelayMs = 500;
 
 public:
