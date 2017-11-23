@@ -13,6 +13,7 @@
 #include "EffSequence.h"
 #include "EffChase.h"
 #include "EffBlobs.h"
+#include "EffSolid.h"
 #include "Palettes.h"
 #include "Config.h"
 
@@ -52,31 +53,23 @@ Effect* nextEffect(uint8_t buffer)
     Effect* effect = NULL;
 
 
-        //effect = new EffSequence(Buffers[buffer], PaletteGreen);
-        //effect = new EffBlobs(Buffers[buffer], PaletteRed);
     if (EffectIndex==0) {
-        //effect = new EffChase(Buffers[buffer], PartyColors_p, false);
-        DBLN("blobs");
         effect = new EffBlobs(Buffers[buffer], PartyColors_p);
     } else if (EffectIndex==1) {
-        DBLN("party fade rough");
-        effect = new EffSequence(Buffers[buffer], PartyColors_p, false);
+        effect = new EffBlobs(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex==2) {
-        DBLN("party smooth");
-        effect = new EffChase(Buffers[buffer], PartyColors_p, true);
+        effect = new EffBlobs(Buffers[buffer], PaletteRed);
     } else if (EffectIndex==3) {
-        DBLN("rainbow rough");
-        effect = new EffChase(Buffers[buffer], RainbowColors_p, false);
+        effect = new EffBlobs(Buffers[buffer], PaletteGreen);
     } else if (EffectIndex==4) {
-        DBLN("rainbow smooth");
-        effect = new EffChase(Buffers[buffer], RainbowColors_p, true);
+        effect = new EffBlobs(Buffers[buffer], PaletteBlue);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
         effect = NULL;
     }
 
-    EffectIndex = (EffectIndex+1) % 4;
+    EffectIndex = (EffectIndex+1) % 5;
     return effect;
 }
 
@@ -176,17 +169,24 @@ void ledUpdate()
 void setup()
 {
     Serial.begin(115200);
+
+    // Init h/w
     Button.begin();
     BrightnessFader.begin(1, 64, true);
     SpeedControl.begin(1, 64, true);
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
 
-    BufferState = JustA;
+    // Initial effect state
     Effects[0] = nextEffect(0);
+    BufferState = JustA;
     MixAmount = 0;
-    //EffectB = new EffChase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
-    //EffectA = new EffSequence(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    //EffectB = new EffChase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    
+    // The analog pins need time to settle.  While this is happening, I call
+    // Update on the DiscretePot objects to stabalize their value
+    while(Millis() < (500)) {
+        BrightnessFader.update();
+        SpeedControl.update();
+    }
 
     MEMFREE;
     DBLN(F("E:setup"));
@@ -197,11 +197,21 @@ void loop()
     Button.update();
     BrightnessFader.update();
     SpeedControl.update();
-    updateTransition();
+
+    uint8_t speed8 = (SpeedControl.value()*4)-1;
+    if (speed8 != SpeedFactor) {
+        SpeedFactor = speed8;
+        DB(F("Speed="));
+        DB(SpeedFactor);
+        DB(' ');
+        MEMFREE;
+    }
 
     if (Button.repeat(50,50)) {
         startTransition();
     }
+
+    updateTransition();
 
     if (BrightnessFader.value() != Brightness) {
         DB(F("Brightness level="));
@@ -214,14 +224,6 @@ void loop()
         MEMFREE;
     }
 
-    uint8_t speed8 = (SpeedControl.value()*4)-1;
-    if (speed8 != SpeedFactor) {
-        SpeedFactor = speed8;
-        DB(F("Speed="));
-        DB(SpeedFactor);
-        DB(' ');
-        MEMFREE;
-    }
 
     ledClear(LedData, LedCount);
     if (Effects[0]) { 
