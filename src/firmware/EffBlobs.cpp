@@ -4,6 +4,8 @@
 #include "EffBlobs.h"
 #include "Config.h"
 
+#define BLOB_SPEED_FACTOR (128./(SpeedFactor < 30 ? 30 : SpeedFactor))
+
 EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
     Effect(ledData),
     _palette(palette),
@@ -14,7 +16,7 @@ EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
 
 void EffBlobs::render()
 {
-    if (Millis() > _lastSpawn + (128./SpeedFactor)*MinSpawnDelayMs || _lastSpawn == 0) {
+    if (Millis() > _lastSpawn + BLOB_SPEED_FACTOR*MinSpawnDelayMs || _lastSpawn == 0) {
         spawn();
     }
 
@@ -74,8 +76,8 @@ void EffBlobs::spawn()
             _blobs[i].firstPixel = random(LedCount-1);
             _blobs[i].fadePixels = random(1,6);
             _blobs[i].onPixels = random(1,6);
-            _blobs[i].fadeMs = (128./SpeedFactor)*random(100, 2001);
-            _blobs[i].onMs = (128./SpeedFactor)*random(300, 1501);
+            _blobs[i].fadeMs = BLOB_SPEED_FACTOR*random(100, 2001);
+            _blobs[i].onMs = BLOB_SPEED_FACTOR*random(300, 1501);
             _blobs[i].color = ColorFromPalette(_palette, random(256));
             //DB(F("spawn slot="));
             //DB(i);
