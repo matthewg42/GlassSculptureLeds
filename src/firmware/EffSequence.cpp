@@ -1,10 +1,10 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
 #include "SpeedControl.h"
-#include "Sequence.h"
+#include "EffSequence.h"
 #include "Config.h"
 
-Sequence::Sequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
+EffSequence::EffSequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
     Effect(ledData),
     _palette(palette),
     _smooth(smooth),
@@ -12,10 +12,10 @@ Sequence::Sequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smoo
     _chunkCounter(0),
     _hue(0)
 {
-    DBLN(F("Start Sequence"));
+    DBLN(F("Start EffSequence"));
 }
 
-void Sequence::render()
+void EffSequence::render()
 {
     if (Millis() > _lastColorChange + ((128./SpeedFactor)*PeriodMs)) {
         _lastColorChange = Millis();

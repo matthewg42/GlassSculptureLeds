@@ -2,15 +2,15 @@
 
 #include "Effect.h"
 
-/*! \class Sequence
+/*! \class EffSequence
  * LED Effect which just fades between the colors in a palette
  */
-class Sequence : public Effect {
+class EffSequence : public Effect {
 public:
     static const uint16_t PeriodMs = 10;
 
 public:
-    Sequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
+    EffSequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
     void render();
 
 protected:
