@@ -53,30 +53,25 @@ Effect* nextEffect(uint8_t buffer)
 
         //effect = new FadeFlop(Buffers[buffer], PaletteGreen);
         //effect = new Blobs(Buffers[buffer], PaletteRed);
-
     if (EffectIndex==0) {
-        effect = new Chase(Buffers[buffer], CloudColors_p);
+        DBLN("party rough");
+        effect = new Chase(Buffers[buffer], PartyColors_p, false);
     } else if (EffectIndex==1) {
-        effect = new Chase(Buffers[buffer], LavaColors_p);
+        DBLN("party smooth");
+        effect = new Chase(Buffers[buffer], PartyColors_p, true);
     } else if (EffectIndex==2) {
-        effect = new Chase(Buffers[buffer], OceanColors_p);
+        DBLN("rainbow rough");
+        effect = new Chase(Buffers[buffer], RainbowColors_p, false);
     } else if (EffectIndex==3) {
-        effect = new Chase(Buffers[buffer], ForestColors_p);
-    } else if (EffectIndex==4) {
-        effect = new Chase(Buffers[buffer], RainbowColors_p);
-    } else if (EffectIndex==5) {
-        effect = new Chase(Buffers[buffer], RainbowStripeColors_p);
-    } else if (EffectIndex==6) {
-        effect = new Chase(Buffers[buffer], PartyColors_p);
-    } else if (EffectIndex==7) {
-        effect = new Chase(Buffers[buffer], HeatColors_p);
+        DBLN("rainbow smooth");
+        effect = new Chase(Buffers[buffer], RainbowColors_p, true);
     } else {
-        DB(F("nextEffect: invalid EffectIndex "));
+        DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
         effect = NULL;
     }
 
-    EffectIndex = (EffectIndex+1) % 8;
+    EffectIndex = (EffectIndex+1) % 4;
     return effect;
 }
 

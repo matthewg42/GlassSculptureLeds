@@ -12,14 +12,15 @@ public:
     static const uint8_t ColorLengthPixels = 10;
 
 public:
-    Chase(CRGB* ledData, const TProgmemRGBPalette16& palette);
+    Chase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
     void render();
 
 protected:
     const TProgmemRGBPalette16& _palette;
+    bool _smooth;
     uint32_t _lastShift;
     uint8_t _pixelCount;
-    uint8_t _hue;
+    float _hue;
 
 };
 
