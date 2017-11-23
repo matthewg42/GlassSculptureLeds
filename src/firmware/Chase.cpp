@@ -4,7 +4,7 @@
 #include "Config.h"
 
 Chase::Chase(CRGB* ledData, const TProgmemRGBPalette16& palette) :
-    Effect(ledData, LedCount),
+    Effect(ledData),
     _palette(palette), 
     _lastShift(0),
     _lastColorChange(0),

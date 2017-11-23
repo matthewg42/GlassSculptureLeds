@@ -18,5 +18,3 @@
 
 ## TODO
 
-* Remove color schemes and use palettes (saves a few bytes of memory)
-* Remove _numLeds from StripEffect class - use LedCount global

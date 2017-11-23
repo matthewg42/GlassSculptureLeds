@@ -4,7 +4,7 @@
 #include "Config.h"
 
 FadeFlop::FadeFlop(CRGB* ledData, const TProgmemRGBPalette16& palette) :
-    Effect(ledData, LedCount),
+    Effect(ledData),
     _palette(palette),
     _lastColorChange(0),
     _colorIndex(0)

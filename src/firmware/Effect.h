@@ -5,7 +5,7 @@
 class Effect {
 public:
     /*! Constructor */
-    Effect(CRGB* ledData, uint16_t numLeds);
+    Effect(CRGB* ledData);
     /*! Destructor */
     virtual ~Effect();
     /*! Render the effect */
@@ -14,7 +14,6 @@ public:
 
 protected:
     CRGB* _ledData;
-    uint16_t _numLeds;
 
 };
 
