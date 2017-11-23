@@ -1,11 +1,11 @@
 #pragma once
 
-#include "StripEffect.h"
+#include "Effect.h"
 
 /*! \class FadeFlop
- * LED StripEffect which just fades between some colors
+ * LED Effect which just fades between some colors
  */
-class FadeFlop : public StripEffect {
+class FadeFlop : public Effect {
 public:
     static const uint16_t PeriodMs = 1000;
 

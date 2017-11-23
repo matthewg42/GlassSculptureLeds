@@ -2,12 +2,12 @@
 
 #include <FastLED.h>
 
-class StripEffect {
+class Effect {
 public:
     /*! Constructor */
-    StripEffect(CRGB* ledData, uint16_t numLeds);
+    Effect(CRGB* ledData, uint16_t numLeds);
     /*! Destructor */
-    virtual ~StripEffect();
+    virtual ~Effect();
     /*! Render the effect */
     virtual void render() = 0;
     /*! Trigger fade in of effect */

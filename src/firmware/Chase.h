@@ -1,12 +1,12 @@
 #pragma once
 
 #include <FastLED.h>
-#include "StripEffect.h"
+#include "Effect.h"
 
 /*! \class Chase
- * LED StripEffect which sends colors along the strip in a fixed sequence
+ * LED Effect which sends colors along the strip in a fixed sequence
  */
-class Chase : public StripEffect {
+class Chase : public Effect {
 public:
     static const uint16_t ShiftPeriodMs = 30;
     static const uint16_t ColorPeriodMs = 100;

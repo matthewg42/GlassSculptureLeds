@@ -4,7 +4,7 @@
 #include "Config.h"
 
 Blobs::Blobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
-    StripEffect(ledData, LedCount),
+    Effect(ledData, LedCount),
     _palette(palette),
     _lastSpawn(0)
 {

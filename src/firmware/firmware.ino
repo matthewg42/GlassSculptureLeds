@@ -8,7 +8,7 @@
 #include <FastLED.h>
 #include "Button.h"
 #include "BrightnessFader.h"
-#include "StripEffect.h"
+#include "Effect.h"
 #include "FadeFlop.h"
 #include "Chase.h"
 #include "Blobs.h"
@@ -24,7 +24,7 @@ CRGB Buffers[2][LedCount];  // Two buffers for two effects
 CRGB LedData[LedCount];     // Mapped onto our LED strip
 
 // Our two effects (for mixing together)
-StripEffect* Effects[2] = { NULL, NULL };
+Effect* Effects[2] = { NULL, NULL };
 
 // Used to keep track of which effect is next
 uint8_t EffectIndex = 0;
@@ -46,9 +46,9 @@ uint8_t Brightness = 0;
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
 
-StripEffect* nextEffect(uint8_t buffer)
+Effect* nextEffect(uint8_t buffer)
 {
-    StripEffect* effect = NULL;
+    Effect* effect = NULL;
 
     //effect = new Blobs(Buffers[buffer], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
     //effect = new FadeFlop(Buffers[buffer], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));

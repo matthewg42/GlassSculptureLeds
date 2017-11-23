@@ -1,7 +1,7 @@
 #pragma once
 
 #include <FastLED.h>
-#include "StripEffect.h"
+#include "Effect.h"
 
 struct Blob {
     uint16_t firstPixel;        //!< Where on the strip we will start to draw this blob
@@ -19,11 +19,11 @@ struct Blob {
 };
 
 /*! \class Blobs
- * LED StripEffect which makes blobs fade in and out at random places along the strip.
+ * LED Effect which makes blobs fade in and out at random places along the strip.
  * The edges of the blobs are faded to black, and they wrap around the ends of the strip.
  * Blob colors are chosen randomly from the color scheme provided
  */
-class Blobs : public StripEffect {
+class Blobs : public Effect {
 public:
     static const uint8_t NumberOfBlobs = 3;
     static const uint16_t MinSpawnDelayMs = 500;
