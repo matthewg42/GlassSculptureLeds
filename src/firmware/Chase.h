@@ -7,11 +7,13 @@
  */
 class Chase : public StripEffect {
 public:
-    Chase(CRGB* ledData, uint16_t numLeds, CRGB* colors, uint16_t numColors, uint16_t shiftPeriodMs=30, uint16_t colorPeriodMs=200);
+    Chase(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, 
+          const uint16_t numColors, const uint16_t shiftPeriodMs=30, 
+          const uint16_t colorPeriodMs=200);
     void render();
 
 protected:
-    CRGB* _colors;
+    const CRGB* _colors;
     uint16_t _numColors;
     uint16_t _shiftPeriodMs;
     uint16_t _colorPeriodMs;

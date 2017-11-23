@@ -2,7 +2,9 @@
 #include <MutilaDebug.h>
 #include "Chase.h"
 
-Chase::Chase(CRGB* ledData, uint16_t numLeds, CRGB* colors, uint16_t numColors, uint16_t shiftPeriodMs, uint16_t colorPeriodMs) :
+Chase::Chase(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, 
+             const uint16_t numColors, const uint16_t shiftPeriodMs, 
+             const uint16_t colorPeriodMs) :
     StripEffect(ledData, numLeds),
     _colors(colors), 
     _numColors(numColors),

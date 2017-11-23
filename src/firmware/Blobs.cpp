@@ -2,7 +2,7 @@
 #include <MutilaDebug.h>
 #include "Blobs.h"
 
-Blobs::Blobs(CRGB* ledData, uint16_t numLeds, CRGB* colors, uint16_t numColors) :
+Blobs::Blobs(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, const uint16_t numColors) :
     StripEffect(ledData, numLeds),
     _colors(colors), 
     _numColors(numColors),

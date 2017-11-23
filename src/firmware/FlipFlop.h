@@ -11,7 +11,7 @@ public:
     void render();
 
 protected:
-    CRGB* _colors;
+    const CRGB* _colors;
     uint16_t _numColors;
     uint16_t _periodMs;
     uint32_t _lastColorChange;

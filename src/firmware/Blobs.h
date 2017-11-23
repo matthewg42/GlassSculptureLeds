@@ -28,13 +28,13 @@ public:
     static const uint16_t MinSpawnDelayMs = 500;
 
 public:
-    Blobs(CRGB* ledData, uint16_t numLeds, CRGB* colors, uint16_t numColors);
+    Blobs(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, const uint16_t numColors);
     void render();
     void spawn();
     void renderBlob(Blob& blob);
 
 protected:
-    CRGB* _colors;
+    const CRGB* _colors;
     uint16_t _numColors;
     Blob _blobs[NumberOfBlobs];
     uint32_t _lastSpawn;
