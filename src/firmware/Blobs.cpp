@@ -1,11 +1,11 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
 #include "Blobs.h"
+#include "Config.h"
 
-Blobs::Blobs(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, const uint16_t numColors) :
-    StripEffect(ledData, numLeds),
-    _colors(colors), 
-    _numColors(numColors),
+Blobs::Blobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
+    StripEffect(ledData, LedCount),
+    _palette(palette),
     _lastSpawn(0)
 {
     DBLN(F("Start Blobs"));
@@ -18,7 +18,7 @@ void Blobs::render()
     }
 
     // clear
-    for (uint16_t c=0; c<_numLeds; c++) {
+    for (uint16_t c=0; c<LedCount; c++) {
         _ledData[c] = CRGB::Black;
     }
     
@@ -48,18 +48,18 @@ void Blobs::renderBlob(Blob& blob)
         for (uint16_t i=1; i<=blob.fadePixels; i++) {
             float rampBright = (float)i / blob.fadePixels;
             _ledData[pos] += blob.color.scale8(CRGB(brightness*rampBright*255, brightness*rampBright*255, brightness*rampBright*255));
-            pos = (pos + 1) % _numLeds;
+            pos = (pos + 1) % LedCount;
         }
         // draw full section
         for (uint16_t i=0; i<blob.onPixels; i++) {
             _ledData[pos] += blob.color.scale8(CRGB(brightness*255,brightness*255,brightness*255));
-            pos = (pos + 1) % _numLeds;
+            pos = (pos + 1) % LedCount;
         }
         // draw fade out
         for (uint16_t i=blob.fadePixels; i>0; i--) {
             float rampBright = (float)i / blob.fadePixels;
             _ledData[pos] += blob.color.scale8(CRGB(brightness*rampBright*255, brightness*rampBright*255, brightness*rampBright*255));
-            pos = (pos + 1) % _numLeds;
+            pos = (pos + 1) % LedCount;
         }
     }
 }
@@ -70,12 +70,12 @@ void Blobs::spawn()
         if (_blobs[i].isDormant()) {
             _lastSpawn = Millis();
             _blobs[i].birthMs = Millis()+1;             // hack to prevent suppression at Millis() == 0
-            _blobs[i].firstPixel = random(_numLeds-1);
+            _blobs[i].firstPixel = random(LedCount-1);
             _blobs[i].fadePixels = random(1,6);
             _blobs[i].onPixels = random(1,6);
             _blobs[i].fadeMs = random(100, 3001);
             _blobs[i].onMs = random(500, 2001);
-            _blobs[i].color = _colors[random(_numColors)];
+            _blobs[i].color = ColorFromPalette(_palette,random(16));
             return;
         }
     }

@@ -57,13 +57,13 @@ StripEffect* nextEffect(uint8_t buffer)
 
     switch (EffectIndex) {
     case 0:
-        effect = new Chase(Buffers[buffer], PaletteRed);
+        effect = new Blobs(Buffers[buffer], PaletteBlue);
         break;
     case 1:
-        effect = new Chase(Buffers[buffer], PaletteBlue);
+        effect = new Chase(Buffers[buffer], PaletteRed);
         break;
     case 2:
-        effect = new Chase(Buffers[buffer], ForestColors_p);
+        effect = new Chase(Buffers[buffer], PaletteBlue);
         break;
     default:
         break;
