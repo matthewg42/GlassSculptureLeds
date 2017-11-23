@@ -9,10 +9,8 @@
 #include "Button.h"
 #include "BrightnessFader.h"
 #include "StripEffect.h"
-#include "FlipFlop.h"
 #include "FadeFlop.h"
 #include "Chase.h"
-#include "FadeChase.h"
 #include "Blobs.h"
 #include "Palettes.h"
 #include "Config.h"
@@ -57,13 +55,13 @@ StripEffect* nextEffect(uint8_t buffer)
 
     switch (EffectIndex) {
     case 0:
-        effect = new Blobs(Buffers[buffer], PaletteBlue);
+        effect = new FadeFlop(Buffers[buffer], PaletteGreen);
         break;
     case 1:
-        effect = new Chase(Buffers[buffer], PaletteRed);
+        effect = new Chase(Buffers[buffer], PaletteBlue);
         break;
     case 2:
-        effect = new Chase(Buffers[buffer], PaletteBlue);
+        effect = new Blobs(Buffers[buffer], PaletteRed);
         break;
     default:
         break;

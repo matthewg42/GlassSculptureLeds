@@ -1,12 +1,11 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
 #include "FadeFlop.h"
+#include "Config.h"
 
-FadeFlop::FadeFlop(CRGB* ledData, const uint16_t numLeds, const uint16_t periodMs, const CRGB* colors, const uint16_t numColors) :
-    StripEffect(ledData, numLeds),
-    _colors(colors), 
-    _numColors(numColors),
-    _periodMs(periodMs),
+FadeFlop::FadeFlop(CRGB* ledData, const TProgmemRGBPalette16& palette) :
+    StripEffect(ledData, LedCount),
+    _palette(palette),
     _lastColorChange(0),
     _colorIndex(0)
 {
@@ -15,18 +14,17 @@ FadeFlop::FadeFlop(CRGB* ledData, const uint16_t numLeds, const uint16_t periodM
 
 void FadeFlop::render()
 {
-    if (Millis() > _lastColorChange + _periodMs) {
+    if (Millis() > _lastColorChange + PeriodMs) {
         _lastColorChange = Millis();
-        _colorIndex = (_colorIndex + 1) % _numColors;
+        _colorIndex = (_colorIndex + 1) % 16;
     }
 
-    uint16_t nextColorIndex = (_colorIndex + 1) % _numColors;
+    uint16_t nextColorIndex = (_colorIndex + 1) % 16;
     uint16_t msSinceLastChange = Millis() - _lastColorChange;
-    float fade = (float)msSinceLastChange / _periodMs;
+    float fade = (float)msSinceLastChange / PeriodMs;
     if (fade > 1) fade = 1;
-    for(uint16_t i=0; i<_numLeds; i++)
-    {
-        _ledData[i] = _colors[_colorIndex].lerp16(_colors[nextColorIndex], 65535*fade);
+    for(uint16_t i=0; i<LedCount; i++) {
+        _ledData[i] = ColorFromPalette(_palette, _colorIndex).lerp8(ColorFromPalette(_palette, nextColorIndex), 255*fade);
     }
 }
 

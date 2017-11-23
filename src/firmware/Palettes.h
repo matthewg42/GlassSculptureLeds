@@ -10,4 +10,5 @@
 //const CRGB PurpleColorScheme[]  = { CRGB::Purple, CRGB::MediumOrchid, CRGB::MediumPurple };
 
 extern const TProgmemRGBPalette16 PaletteRed FL_PROGMEM;
+extern const TProgmemRGBPalette16 PaletteGreen FL_PROGMEM;
 extern const TProgmemRGBPalette16 PaletteBlue FL_PROGMEM;
