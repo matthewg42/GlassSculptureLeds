@@ -9,7 +9,7 @@
 class Chase : public Effect {
 public:
     static const uint16_t ShiftPeriodMs = 30;
-    static const uint16_t ColorPeriodMs = 100;
+    static const uint8_t ColorLengthPixels = 10;
 
 public:
     Chase(CRGB* ledData, const TProgmemRGBPalette16& palette);
@@ -18,8 +18,8 @@ public:
 protected:
     const TProgmemRGBPalette16& _palette;
     uint32_t _lastShift;
-    uint32_t _lastColorChange;
-    uint8_t _colorIndex;
+    uint8_t _pixelCount;
+    uint8_t _hue;
 
 };
 

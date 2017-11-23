@@ -7,17 +7,16 @@ Chase::Chase(CRGB* ledData, const TProgmemRGBPalette16& palette) :
     Effect(ledData),
     _palette(palette), 
     _lastShift(0),
-    _lastColorChange(0),
-    _colorIndex(0)
+    _hue(0)
 {
     DBLN(F("Start Chase"));
 }
 
 void Chase::render()
 {
-    if (Millis() > _lastColorChange + ColorPeriodMs) {
-        _lastColorChange = Millis();
-        _colorIndex = (_colorIndex + 1) % 16;
+    if (_pixelCount >= ColorLengthPixels) {
+        _pixelCount = 0;
+        _hue = (_hue + 16) % 256;
     }
 
     if (Millis() > _lastShift + ShiftPeriodMs) {
@@ -29,7 +28,8 @@ void Chase::render()
         }
 
         // Put the current color at the start
-        _ledData[0] = ColorFromPalette(_palette, _colorIndex);
+        _ledData[0] = ColorFromPalette(_palette, _hue);
+        _pixelCount++;
     }
 }
 

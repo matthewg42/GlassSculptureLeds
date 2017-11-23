@@ -50,24 +50,33 @@ Effect* nextEffect(uint8_t buffer)
 {
     Effect* effect = NULL;
 
-    //effect = new Blobs(Buffers[buffer], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    //effect = new FadeFlop(Buffers[buffer], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
 
-    switch (EffectIndex) {
-    case 0:
-        effect = new FadeFlop(Buffers[buffer], PaletteGreen);
-        break;
-    case 1:
-        effect = new Chase(Buffers[buffer], PaletteBlue);
-        break;
-    case 2:
-        effect = new Blobs(Buffers[buffer], PaletteRed);
-        break;
-    default:
-        break;
+        //effect = new FadeFlop(Buffers[buffer], PaletteGreen);
+        //effect = new Blobs(Buffers[buffer], PaletteRed);
+
+    if (EffectIndex==0) {
+        effect = new Chase(Buffers[buffer], CloudColors_p);
+    } else if (EffectIndex==1) {
+        effect = new Chase(Buffers[buffer], LavaColors_p);
+    } else if (EffectIndex==2) {
+        effect = new Chase(Buffers[buffer], OceanColors_p);
+    } else if (EffectIndex==3) {
+        effect = new Chase(Buffers[buffer], ForestColors_p);
+    } else if (EffectIndex==4) {
+        effect = new Chase(Buffers[buffer], RainbowColors_p);
+    } else if (EffectIndex==5) {
+        effect = new Chase(Buffers[buffer], RainbowStripeColors_p);
+    } else if (EffectIndex==6) {
+        effect = new Chase(Buffers[buffer], PartyColors_p);
+    } else if (EffectIndex==7) {
+        effect = new Chase(Buffers[buffer], HeatColors_p);
+    } else {
+        DB(F("nextEffect: invalid EffectIndex "));
+        DBLN(EffectIndex);
+        effect = NULL;
     }
 
-    EffectIndex = (EffectIndex+1) % 3;
+    EffectIndex = (EffectIndex+1) % 8;
     return effect;
 }
 
