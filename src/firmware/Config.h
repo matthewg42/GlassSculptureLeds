@@ -15,3 +15,5 @@ const uint8_t       ButtonPin =             3;
 const bool          ButtonPullup =          true;
 
 const uint8_t       HeartbeatPin =          13;
+
+const uint8_t       BrightnessFaderPin =    A7;
