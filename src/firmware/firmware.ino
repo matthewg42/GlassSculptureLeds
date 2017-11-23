@@ -19,6 +19,7 @@
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
 
 // Global variables ////////////////////////////////////////////////////////////////////////////
+
 // Buffers of color data for rendering our effects 
 CRGB Buffers[2][LedCount];  // Two buffers for two effects
 CRGB LedData[LedCount];     // Mapped onto our LED strip
@@ -26,6 +27,12 @@ CRGB LedData[LedCount];     // Mapped onto our LED strip
 // Our two effects (for mixing together)
 StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
+
+typedef enum { None, JustA, AtoB, JustB, BtoA } t_BufferState;
+t_BufferState BufferState = None;
+    
+// Used to control transitions
+uint32_t LastTransitionStart = 0;
 
 // Which way will be mix (0: EffectA@100%, EffectB@0%; 1: EffectA@0%, EffectB@100%)
 uint8_t mixAmount = 128;
@@ -74,8 +81,11 @@ void setup()
     Button.begin();
     BrightnessFader.begin(1,64,true);
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
+
+    BufferState = JustA;
     EffectA = new Blobs(Buffers[0], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    mixAmount = 0;
+    //EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     //EffectA = new FadeFlop(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
     //EffectB = new Chase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
 
@@ -106,11 +116,11 @@ void loop()
     ledClear(LedData, LedCount);
     if (EffectA) { 
         EffectA->render(); 
-        mixAdd(Buffers[0], LedData, LedCount, mixAmount);
+        mixAdd(Buffers[0], LedData, LedCount, 255-mixAmount);
     }
     if (EffectB) { 
         EffectB->render(); 
-        mixAdd(Buffers[1], LedData, LedCount, 255-mixAmount);
+        mixAdd(Buffers[1], LedData, LedCount, mixAmount);
     }
     ledUpdate();
 }
