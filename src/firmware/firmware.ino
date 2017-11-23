@@ -14,6 +14,7 @@
 #include "Chase.h"
 #include "FadeChase.h"
 #include "Blobs.h"
+#include "Palettes.h"
 #include "Config.h"
 
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
@@ -42,13 +43,6 @@ uint8_t MixAmount = 128;
 // Used to control frame rate
 uint32_t LastLedUpdate = 0;
 
-// Color schemes for our effects
-const CRGB RedColorScheme[]     = { CRGB::Red, CRGB::OrangeRed, CRGB::Crimson };
-const CRGB BlueColorScheme[]    = { CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue };
-const CRGB GreenColorScheme[]   = { CRGB::Green, CRGB::LawnGreen, CRGB::DarkOliveGreen };
-const CRGB YellowColorScheme[]  = { CRGB::Yellow, CRGB::LightGoldenrodYellow, CRGB::GreenYellow };
-const CRGB PurpleColorScheme[]  = { CRGB::Purple, CRGB::MediumOrchid, CRGB::MediumPurple };
-
 // For brightness control
 uint8_t Brightness = 0;
 
@@ -57,15 +51,19 @@ uint8_t Brightness = 0;
 StripEffect* nextEffect(uint8_t buffer)
 {
     StripEffect* effect = NULL;
+
+    //effect = new Blobs(Buffers[buffer], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    //effect = new FadeFlop(Buffers[buffer], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+
     switch (EffectIndex) {
     case 0:
-        effect = new Blobs(Buffers[buffer], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+        effect = new Chase(Buffers[buffer], PaletteRed);
         break;
     case 1:
-        effect = new Chase(Buffers[buffer], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+        effect = new Chase(Buffers[buffer], PaletteBlue);
         break;
     case 2:
-        effect = new FadeFlop(Buffers[buffer], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+        effect = new Chase(Buffers[buffer], ForestColors_p);
         break;
     default:
         break;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <FastLED.h>
 #include "StripEffect.h"
 
 /*! \class Chase
@@ -7,19 +8,19 @@
  */
 class Chase : public StripEffect {
 public:
-    Chase(CRGB* ledData, const uint16_t numLeds, const CRGB* colors, 
-          const uint16_t numColors, const uint16_t shiftPeriodMs=30, 
-          const uint16_t colorPeriodMs=200);
+    static const uint16_t ShiftPeriodMs = 30;
+    static const uint16_t ColorPeriodMs = 100;
+
+public:
+    Chase(CRGB* ledData, const TProgmemRGBPalette16& palette);
     void render();
 
 protected:
     const CRGB* _colors;
-    uint16_t _numColors;
-    uint16_t _shiftPeriodMs;
-    uint16_t _colorPeriodMs;
+    const TProgmemRGBPalette16& _palette;
     uint32_t _lastShift;
     uint32_t _lastColorChange;
-    uint16_t _colorIndex;
+    uint8_t _colorIndex;
 
 };
 
