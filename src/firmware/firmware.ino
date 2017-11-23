@@ -56,8 +56,8 @@ Effect* nextEffect(uint8_t buffer)
         //effect = new EffBlobs(Buffers[buffer], PaletteRed);
     if (EffectIndex==0) {
         //effect = new EffChase(Buffers[buffer], PartyColors_p, false);
-        DBLN("party fade smooth");
-        effect = new EffSequence(Buffers[buffer], PartyColors_p, true);
+        DBLN("blobs");
+        effect = new EffBlobs(Buffers[buffer], PartyColors_p);
     } else if (EffectIndex==1) {
         DBLN("party fade rough");
         effect = new EffSequence(Buffers[buffer], PartyColors_p, false);

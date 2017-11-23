@@ -1,5 +1,6 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
+#include "SpeedControl.h"
 #include "EffBlobs.h"
 #include "Config.h"
 
@@ -13,7 +14,7 @@ EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
 
 void EffBlobs::render()
 {
-    if (Millis() > _lastSpawn + MinSpawnDelayMs || _lastSpawn == 0) {
+    if (Millis() > _lastSpawn + (128./SpeedFactor)*MinSpawnDelayMs || _lastSpawn == 0) {
         spawn();
     }
 
@@ -73,9 +74,9 @@ void EffBlobs::spawn()
             _blobs[i].firstPixel = random(LedCount-1);
             _blobs[i].fadePixels = random(1,6);
             _blobs[i].onPixels = random(1,6);
-            _blobs[i].fadeMs = random(100, 3001);
-            _blobs[i].onMs = random(500, 2001);
-            _blobs[i].color = ColorFromPalette(_palette,random(16));
+            _blobs[i].fadeMs = (128./SpeedFactor)*random(100, 2001);
+            _blobs[i].onMs = (128./SpeedFactor)*random(300, 1501);
+            _blobs[i].color = ColorFromPalette(_palette, random(256));
             return;
         }
     }
