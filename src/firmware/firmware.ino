@@ -18,6 +18,7 @@
 
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
 
+// Global variables ////////////////////////////////////////////////////////////////////////////
 // Buffers of color data for rendering our effects 
 CRGB Buffers[2][LedCount];  // Two buffers for two effects
 CRGB LedData[LedCount];     // Mapped onto our LED strip
@@ -33,11 +34,16 @@ uint8_t mixAmount = 128;
 uint32_t LastLedUpdate = 0;
 
 // Color schemes for our effects
-const CRGB RedColorScheme[] = { CRGB::Red, CRGB::LightYellow, CRGB::Orange };
-const CRGB BlueColorScheme[] = { CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue };
+const CRGB RedColorScheme[]     = { CRGB::Red, CRGB::OrangeRed, CRGB::Crimson };
+const CRGB BlueColorScheme[]    = { CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue };
+const CRGB GreenColorScheme[]   = { CRGB::Green, CRGB::LawnGreen, CRGB::DarkOliveGreen };
+const CRGB YellowColorScheme[]  = { CRGB::Yellow, CRGB::LightGoldenrodYellow, CRGB::GreenYellow };
+const CRGB PurpleColorScheme[]  = { CRGB::Purple, CRGB::MediumOrchid, CRGB::MediumPurple };
 
 // For brightness control
 uint8_t Brightness = 0;
+
+// Functions ///////////////////////////////////////////////////////////////////////////////////
 
 void ledClear(CRGB* dest, uint16_t count) 
 {
