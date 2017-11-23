@@ -17,6 +17,7 @@ protected:
     const TProgmemRGBPalette16& _palette;
     bool _smooth;
     uint32_t _lastColorChange;
+    uint8_t _chunkCounter;
     float _hue;
 
 };

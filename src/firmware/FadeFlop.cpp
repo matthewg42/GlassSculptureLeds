@@ -9,6 +9,7 @@ FadeFlop::FadeFlop(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smoo
     _palette(palette),
     _smooth(smooth),
     _lastColorChange(0),
+    _chunkCounter(0),
     _hue(0)
 {
     DBLN(F("Start FadeFlop"));
@@ -18,7 +19,14 @@ void FadeFlop::render()
 {
     if (Millis() > _lastColorChange + ((128./SpeedFactor)*PeriodMs)) {
         _lastColorChange = Millis();
-        _hue = _hue+1;
+        if (_smooth) {
+            _hue = _hue+1;
+        } else {
+            if (++_chunkCounter >= 16) {
+                _chunkCounter = 0;
+                _hue += 16;
+            }
+        }
         // modulusish
         while (_hue >= 255) { _hue -= 255; }
 
