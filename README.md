@@ -16,4 +16,6 @@
    * some seconds after change, save?
 * Here's the trickly one: smooth transition between effects
 
+## TODO
 
+* Remove color schemes and use palettes (saves a few bytes of memory)
