@@ -2,7 +2,6 @@
 #include <Arduino.h>
 #include <MutilaDebug.h>
 #include <Millis.h>
-#include <Heartbeat.h>
 #include <DebouncedButton.h>
 #include <DiscretePot.h>
 #include <MemoryFree.h>
@@ -19,20 +18,26 @@
 
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
 
-Heartbeat HeartBeat(HeartbeatPin);
-uint16_t pos = 0;
-CRGB LedData[LedCount];
-CRGB BufA[LedCount];
-CRGB BufB[LedCount];
-uint32_t LastLedUpdate = 0;
+// Buffers of color data for rendering our effects 
+CRGB Buffers[2][LedCount];  // Two buffers for two effects
+CRGB LedData[LedCount];     // Mapped onto our LED strip
+
+// Our two effects (for mixing together)
 StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
-CRGB RedColorScheme[] = { CRGB::Red, CRGB::LightYellow, CRGB::PaleVioletRed, CRGB::DarkRed, 
-                          CRGB::Yellow, CRGB::MediumVioletRed, CRGB::Orange, CRGB::White };
-CRGB BlueColorScheme[] = { CRGB::DeepSkyBlue, CRGB::Cyan, CRGB::DarkBlue, CRGB::CornflowerBlue, 
-                           CRGB::BlueViolet, CRGB::SteelBlue, CRGB::MidnightBlue, CRGB::LightSteelBlue };
-uint8_t mixAmount = 255;
-uint8_t prevBrightness = 0;
+
+// Which way will be mix (0: EffectA@100%, EffectB@0%; 1: EffectA@0%, EffectB@100%)
+uint8_t mixAmount = 128;
+
+// Used to control frame rate
+uint32_t LastLedUpdate = 0;
+
+// Color schemes for our effects
+const CRGB RedColorScheme[] = { CRGB::Red, CRGB::LightYellow, CRGB::Orange };
+const CRGB BlueColorScheme[] = { CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue };
+
+// For brightness control
+uint8_t Brightness = 0;
 
 void ledClear(CRGB* dest, uint16_t count) 
 {
@@ -62,12 +67,11 @@ void setup()
     Serial.begin(115200);
     Button.begin();
     BrightnessFader.begin(1,64,true);
-    HeartBeat.begin();
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    EffectA = new Blobs(BufA, LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    //EffectA = new FadeFlop(BufA, LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    EffectB = new FadeChase(BufB, LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
-    // EffectB = new Chase(BufB, LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    EffectA = new Blobs(Buffers[0], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    EffectB = new FadeChase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
+    //EffectA = new FadeFlop(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    //EffectB = new Chase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
 
     MEMFREE;
     DBLN(F("E:setup"));
@@ -77,30 +81,30 @@ void loop()
 {
     Button.update();
     BrightnessFader.update();
-    HeartBeat.update();
 
     if (Button.tapped()) {
         DBLN(F("Button press: starting transition"));
     }
 
-    if (BrightnessFader.value() != prevBrightness) {
+    if (BrightnessFader.value() != Brightness) {
         DB(F("Brightness level="));
         DB(BrightnessFader.value());
         DB(F(" scale8="));
-        DBLN((BrightnessFader.value()*4)-1);
+        DB((BrightnessFader.value()*4)-1);
+        DB(' ');
         FastLED.setBrightness((BrightnessFader.value()*4)-1);
-        prevBrightness = BrightnessFader.value();
+        Brightness = BrightnessFader.value();
         MEMFREE;
     }
 
     ledClear(LedData, LedCount);
     if (EffectA) { 
         EffectA->render(); 
-        mixAdd(BufA, LedData, LedCount, mixAmount);
+        mixAdd(Buffers[0], LedData, LedCount, mixAmount);
     }
     if (EffectB) { 
         EffectB->render(); 
-        mixAdd(BufB, LedData, LedCount, 255-mixAmount);
+        mixAdd(Buffers[1], LedData, LedCount, 255-mixAmount);
     }
     ledUpdate();
 }
