@@ -20,3 +20,4 @@
 
 * EEPROM saving of state
 * add sparkle option to modes
+* reset before millis wrap

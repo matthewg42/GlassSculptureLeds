@@ -21,37 +21,32 @@
 
 // Global variables ////////////////////////////////////////////////////////////////////////////
 
+#ifdef CROSSFADE
 // Buffers of color data for rendering our effects 
-CRGB Buffers[2][LedCount];  // Two buffers for two effects
-CRGB LedData[LedCount];     // Mapped onto our LED strip
-
-// Our two effects (for mixing together)
-Effect* Effects[2] = { NULL, NULL };
-
-// Used to keep track of which effect is next
-uint8_t EffectIndex = 0;
+CRGB Buffers[2][LedCount];              // Two buffers 
+Effect* Effects[2] = { NULL, NULL };    // ...for two effects
 
 typedef enum { None, JustA, JustB, AtoB, BtoA } t_BufferState;
-t_BufferState BufferState = None;
-    
-// Used to control transitions
-uint32_t LastTransitionStart = 0;
+t_BufferState BufferState = None;       // Keep track of transition state
+uint32_t LastTransitionStart = 0;       // And when it started
+uint8_t MixAmount = 128;                // 0: EffectA@100%, EffectB@0%; 255: EffectA@0%, EffectB@100%
+CRGB LedData[LedCount];                 // Mapped onto our LED strip by FastLED lib
+#else
+// no crossfade - we render directly into the LedData buffer, so don't need lots
+// of those globals. Save the RAM!
+CRGB Buffers[1][LedCount];              // This will be rendered directly
+Effect* Effects[1] = { NULL };          // and attached to this effect
+#endif
 
-// Which way will be mix (0: EffectA@100%, EffectB@0%; 1: EffectA@0%, EffectB@100%)
-uint8_t MixAmount = 128;
-
-// Used to control frame rate
-uint32_t LastLedUpdate = 0;
-
-// For brightness and speed control by user
-uint8_t Brightness = 0;
+uint8_t EffectIndex = 0;                // Used to keep track of which effect is next
+uint32_t LastLedUpdate = 0;             // Used to control frame rate
+uint8_t Brightness = 0;                 // For brightness control by user
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
 
 Effect* nextEffect(uint8_t buffer)
 {
     Effect* effect = NULL;
-
 
     if (EffectIndex==0) {
         effect = new EffBlobs(Buffers[buffer], PartyColors_p);
@@ -73,11 +68,12 @@ Effect* nextEffect(uint8_t buffer)
     return effect;
 }
 
-void startTransition()
+#ifdef CROSSFADE
+void startCrossfade()
 {
     switch(BufferState) {
     case JustA:
-        DB(F("startTransition: starting AtoB "));
+        DB(F("startCrossfade: starting AtoB "));
         MEMFREE;
         LastTransitionStart = Millis();
         BufferState = AtoB;
@@ -88,7 +84,7 @@ void startTransition()
         Effects[1] = nextEffect(1);
         break;
     case JustB:
-        DB(F("startTransition: starting BtoA "));
+        DB(F("startCrossfade: starting BtoA "));
         MEMFREE;
         LastTransitionStart = Millis();
         BufferState = BtoA;
@@ -99,7 +95,7 @@ void startTransition()
         Effects[0] = nextEffect(0);
         break;
     default:
-        // DBLN(F("startTransition: already transitioning"));
+        // DBLN(F("startCrossfade: already transitioning"));
         break;
     }
 }
@@ -143,17 +139,31 @@ void updateTransition()
     }
 }
 
-void ledClear(CRGB* dest, uint16_t count) 
-{
-    for(uint16_t i=0; i<count; i++) {
-        dest[i] = CRGB::Black;
-    }
-}
-
 void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale=255) 
 {
     for(uint16_t i=0; i<count; i++) {
         dest[i] = dest[i].lerp8(src[i], scale);
+    }
+}
+
+#else  // end CROSSFADE
+void switchEffect()
+{
+    // for switchEffect, we just just slot A, deleting any existing effect before 
+    // starting the next one
+    DB(F("switchEffect: next!"));
+    if (Effects[0] != NULL) {
+        delete Effects[0];
+        Effects[0] = NULL;
+    }
+    Effects[0] = nextEffect(0);
+}
+#endif // end !CROSSFADE
+
+void ledClear(CRGB* dest, uint16_t count) 
+{
+    for(uint16_t i=0; i<count; i++) {
+        dest[i] = CRGB::Black;
     }
 }
 
@@ -174,12 +184,17 @@ void setup()
     Button.begin();
     BrightnessFader.begin(1, 64, true);
     SpeedControl.begin(1, 64, true);
+
+#ifdef CROSSFADE
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
+    BufferState = JustA;
+    MixAmount = 0;
+#else
+    FastLED.addLeds<LedChipset, LedPin, LedOrder>(Buffers[0], LedCount);
+#endif
 
     // Initial effect state
     Effects[0] = nextEffect(0);
-    BufferState = JustA;
-    MixAmount = 0;
     
     // The analog pins need time to settle.  While this is happening, I call
     // Update on the DiscretePot objects to stabalize their value
@@ -208,10 +223,16 @@ void loop()
     }
 
     if (Button.repeat(50,50)) {
-        startTransition();
+#ifdef CROSSFADE
+        startCrossfade();
+#else
+        switchEffect();
+#endif
     }
 
+#ifdef CROSSFADE
     updateTransition();
+#endif
 
     if (BrightnessFader.value() != Brightness) {
         DB(F("Brightness level="));
@@ -224,7 +245,8 @@ void loop()
         MEMFREE;
     }
 
-
+#ifdef CROSSFADE
+    // Render it all out
     ledClear(LedData, LedCount);
     if (Effects[0]) { 
         Effects[0]->render(); 
@@ -234,6 +256,11 @@ void loop()
         Effects[1]->render(); 
         mixAdd(Buffers[1], LedData, LedCount, MixAmount);
     }
+#else
+    if (Effects[0]) { 
+        Effects[0]->render(); 
+    }
+#endif
     ledUpdate();
 }
 
