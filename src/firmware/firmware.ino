@@ -5,6 +5,7 @@
 #include <Heartbeat.h>
 #include <DebouncedButton.h>
 #include <DiscretePot.h>
+#include <MemoryFree.h>
 #include <FastLED.h>
 #include "Button.h"
 #include "BrightnessFader.h"
@@ -15,6 +16,8 @@
 #include "FadeChase.h"
 #include "Blobs.h"
 #include "Config.h"
+
+#define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
 
 Heartbeat HeartBeat(HeartbeatPin);
 uint16_t pos = 0;
@@ -66,6 +69,7 @@ void setup()
     EffectB = new FadeChase(BufB, LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     // EffectB = new Chase(BufB, LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
 
+    MEMFREE;
     DBLN(F("E:setup"));
 }
 
@@ -86,6 +90,7 @@ void loop()
         DBLN((BrightnessFader.value()*4)-1);
         FastLED.setBrightness((BrightnessFader.value()*4)-1);
         prevBrightness = BrightnessFader.value();
+        MEMFREE;
     }
 
     ledClear(LedData, LedCount);
