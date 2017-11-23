@@ -25,8 +25,7 @@ CRGB Buffers[2][LedCount];  // Two buffers for two effects
 CRGB LedData[LedCount];     // Mapped onto our LED strip
 
 // Our two effects (for mixing together)
-StripEffect* EffectA = NULL;
-StripEffect* EffectB = NULL;
+StripEffect* Effects[2] = { NULL, NULL };
 
 typedef enum { None, JustA, JustB, AtoB, BtoA } t_BufferState;
 t_BufferState BufferState = None;
@@ -51,6 +50,8 @@ const CRGB PurpleColorScheme[]  = { CRGB::Purple, CRGB::MediumOrchid, CRGB::Medi
 uint8_t Brightness = 0;
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
+
+
 
 void startTransition()
 {
@@ -132,7 +133,7 @@ void setup()
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
 
     BufferState = JustA;
-    EffectA = new Blobs(Buffers[0], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    Effects[0] = new Blobs(Buffers[0], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
     MixAmount = 0;
     //EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     //EffectA = new FadeFlop(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
@@ -165,12 +166,12 @@ void loop()
     }
 
     ledClear(LedData, LedCount);
-    if (EffectA) { 
-        EffectA->render(); 
+    if (Effects[0]) { 
+        Effects[0]->render(); 
         mixAdd(Buffers[0], LedData, LedCount, 255-MixAmount);
     }
-    if (EffectB) { 
-        EffectB->render(); 
+    if (Effects[1]) { 
+        Effects[1]->render(); 
         mixAdd(Buffers[1], LedData, LedCount, MixAmount);
     }
     ledUpdate();
