@@ -1,5 +1,6 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
+#include "SpeedControl.h"
 #include "Chase.h"
 #include "Config.h"
 
@@ -15,8 +16,7 @@ Chase::Chase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
 
 void Chase::render()
 {
-
-    if (Millis() > _lastShift + ShiftPeriodMs) {
+    if (Millis() > _lastShift + ((128./SpeedFactor)*ShiftPeriodMs)) {
         _lastShift = Millis();
 
         // See if it's time to update the color...
@@ -39,8 +39,6 @@ void Chase::render()
         }
 
         // Put the current color at the start
-        DB("hue=");
-        DBLN(_hue, 2);
         _ledData[0] = ColorFromPalette(_palette, _hue);
     }
 }

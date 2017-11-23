@@ -8,6 +8,7 @@
 #include <FastLED.h>
 #include "Button.h"
 #include "BrightnessFader.h"
+#include "SpeedControl.h"
 #include "Effect.h"
 #include "FadeFlop.h"
 #include "Chase.h"
@@ -41,7 +42,7 @@ uint8_t MixAmount = 128;
 // Used to control frame rate
 uint32_t LastLedUpdate = 0;
 
-// For brightness control
+// For brightness and speed control by user
 uint8_t Brightness = 0;
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
@@ -172,7 +173,8 @@ void setup()
 {
     Serial.begin(115200);
     Button.begin();
-    BrightnessFader.begin(1,64,true);
+    BrightnessFader.begin(1, 64, true);
+    SpeedControl.begin(1, 64, true);
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
 
     BufferState = JustA;
@@ -190,6 +192,7 @@ void loop()
 {
     Button.update();
     BrightnessFader.update();
+    SpeedControl.update();
     updateTransition();
 
     if (Button.repeat(50,50)) {
@@ -204,6 +207,15 @@ void loop()
         DB(' ');
         FastLED.setBrightness((BrightnessFader.value()*4)-1);
         Brightness = BrightnessFader.value();
+        MEMFREE;
+    }
+
+    uint8_t speed8 = (SpeedControl.value()*4)-1;
+    if (speed8 != SpeedFactor) {
+        SpeedFactor = speed8;
+        DB(F("Speed="));
+        DB(SpeedFactor);
+        DB(' ');
         MEMFREE;
     }
 
