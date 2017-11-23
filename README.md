@@ -18,3 +18,4 @@
 
 ## TODO
 
+* EEPROM saving of state
