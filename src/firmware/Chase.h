@@ -16,7 +16,6 @@ public:
     void render();
 
 protected:
-    const CRGB* _colors;
     const TProgmemRGBPalette16& _palette;
     uint32_t _lastShift;
     uint32_t _lastColorChange;
