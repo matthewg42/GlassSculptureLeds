@@ -10,7 +10,7 @@ const EOrder        LedOrder =              GRB;
 const uint8_t       LedPin =                4;
 const uint16_t      LedRefreshMs =          10;
 
-const uint16_t      TransitionMs =          1000;
+const uint16_t      TransitionMs =          2000;
 
 // The mode button
 const uint8_t       ButtonPin =             3;

@@ -28,14 +28,14 @@ CRGB LedData[LedCount];     // Mapped onto our LED strip
 StripEffect* EffectA = NULL;
 StripEffect* EffectB = NULL;
 
-typedef enum { None, JustA, AtoB, JustB, BtoA } t_BufferState;
+typedef enum { None, JustA, JustB, AtoB, BtoA } t_BufferState;
 t_BufferState BufferState = None;
     
 // Used to control transitions
 uint32_t LastTransitionStart = 0;
 
 // Which way will be mix (0: EffectA@100%, EffectB@0%; 1: EffectA@0%, EffectB@100%)
-uint8_t mixAmount = 128;
+uint8_t MixAmount = 128;
 
 // Used to control frame rate
 uint32_t LastLedUpdate = 0;
@@ -51,6 +51,55 @@ const CRGB PurpleColorScheme[]  = { CRGB::Purple, CRGB::MediumOrchid, CRGB::Medi
 uint8_t Brightness = 0;
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
+
+void startTransition()
+{
+    switch(BufferState) {
+    case JustA:
+        DBLN(F("startTransition: starting AtoB"));
+        LastTransitionStart = Millis();
+        BufferState = AtoB;
+        break;
+    case JustB:
+        DBLN(F("startTransition: starting BtoA"));
+        LastTransitionStart = Millis();
+        BufferState = BtoA;
+        break;
+    default:
+        DBLN(F("startTransition: already transitioning"));
+    }
+}
+
+void updateTransition()
+{
+    float complete = (float)(Millis() - LastTransitionStart) / TransitionMs;;
+    switch(BufferState) {
+    case AtoB:
+        if (complete >= 1.0) {
+            MixAmount = 255;
+            BufferState = JustB;
+            LastTransitionStart = 0;
+            DBLN(F("Transition AtoB complete"));
+        } else {
+            MixAmount = 255 * complete;
+        }
+        break;
+    case BtoA:
+        complete = (float)(Millis() - LastTransitionStart) / TransitionMs;
+        if (complete >= 1.0) {
+            MixAmount = 0;
+            BufferState = JustA;
+            LastTransitionStart = 0;
+            DBLN(F("Transition BtoA complete"));
+        } else {
+            MixAmount = 255 - (255 * complete);
+        }
+        break;
+    default:
+        // nothing to do
+        break;
+    }
+}
 
 void ledClear(CRGB* dest, uint16_t count) 
 {
@@ -84,7 +133,7 @@ void setup()
 
     BufferState = JustA;
     EffectA = new Blobs(Buffers[0], LedCount, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
-    mixAmount = 0;
+    MixAmount = 0;
     //EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
     //EffectA = new FadeFlop(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
     //EffectB = new Chase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
@@ -97,9 +146,11 @@ void loop()
 {
     Button.update();
     BrightnessFader.update();
+    updateTransition();
 
     if (Button.tapped()) {
         DBLN(F("Button press: starting transition"));
+        startTransition();
     }
 
     if (BrightnessFader.value() != Brightness) {
@@ -116,11 +167,11 @@ void loop()
     ledClear(LedData, LedCount);
     if (EffectA) { 
         EffectA->render(); 
-        mixAdd(Buffers[0], LedData, LedCount, 255-mixAmount);
+        mixAdd(Buffers[0], LedData, LedCount, 255-MixAmount);
     }
     if (EffectB) { 
         EffectB->render(); 
-        mixAdd(Buffers[1], LedData, LedCount, mixAmount);
+        mixAdd(Buffers[1], LedData, LedCount, MixAmount);
     }
     ledUpdate();
 }
