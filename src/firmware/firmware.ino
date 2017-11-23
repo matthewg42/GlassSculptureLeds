@@ -10,7 +10,7 @@
 #include "BrightnessFader.h"
 #include "SpeedControl.h"
 #include "Effect.h"
-#include "FadeFlop.h"
+#include "Sequence.h"
 #include "Chase.h"
 #include "Blobs.h"
 #include "Palettes.h"
@@ -52,15 +52,15 @@ Effect* nextEffect(uint8_t buffer)
     Effect* effect = NULL;
 
 
-        //effect = new FadeFlop(Buffers[buffer], PaletteGreen);
+        //effect = new Sequence(Buffers[buffer], PaletteGreen);
         //effect = new Blobs(Buffers[buffer], PaletteRed);
     if (EffectIndex==0) {
         //effect = new Chase(Buffers[buffer], PartyColors_p, false);
         DBLN("party fade smooth");
-        effect = new FadeFlop(Buffers[buffer], PartyColors_p, true);
+        effect = new Sequence(Buffers[buffer], PartyColors_p, true);
     } else if (EffectIndex==1) {
         DBLN("party fade rough");
-        effect = new FadeFlop(Buffers[buffer], PartyColors_p, false);
+        effect = new Sequence(Buffers[buffer], PartyColors_p, false);
     } else if (EffectIndex==2) {
         DBLN("party smooth");
         effect = new Chase(Buffers[buffer], PartyColors_p, true);
@@ -185,7 +185,7 @@ void setup()
     Effects[0] = nextEffect(0);
     MixAmount = 0;
     //EffectB = new Chase(Buffers[1], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
-    //EffectA = new FadeFlop(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
+    //EffectA = new Sequence(Buffers[0], LedCount, 2000, RedColorScheme, sizeof(RedColorScheme)/sizeof((RedColorScheme)[0]));
     //EffectB = new Chase(Buffers[0], LedCount, BlueColorScheme, sizeof(BlueColorScheme)/sizeof((BlueColorScheme)[0]), 70, 1100);
 
     MEMFREE;

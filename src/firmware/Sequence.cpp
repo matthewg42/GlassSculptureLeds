@@ -1,10 +1,10 @@
 #include <Millis.h>
 #include <MutilaDebug.h>
 #include "SpeedControl.h"
-#include "FadeFlop.h"
+#include "Sequence.h"
 #include "Config.h"
 
-FadeFlop::FadeFlop(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
+Sequence::Sequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth) :
     Effect(ledData),
     _palette(palette),
     _smooth(smooth),
@@ -12,10 +12,10 @@ FadeFlop::FadeFlop(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smoo
     _chunkCounter(0),
     _hue(0)
 {
-    DBLN(F("Start FadeFlop"));
+    DBLN(F("Start Sequence"));
 }
 
-void FadeFlop::render()
+void Sequence::render()
 {
     if (Millis() > _lastColorChange + ((128./SpeedFactor)*PeriodMs)) {
         _lastColorChange = Millis();
