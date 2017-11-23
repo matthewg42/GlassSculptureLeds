@@ -4,7 +4,6 @@
 #include <Millis.h>
 #include <Heartbeat.h>
 #include <DebouncedButton.h>
-#include <DualButton.h>
 #include <FastLED.h>
 #include "Button.h"
 #include "StripEffect.h"
@@ -70,10 +69,8 @@ void loop()
     Button.update();
     HeartBeat.update();
 
-    if (Button.repeat(20, 20)) {
-        mixAmount++;
-        DB(F("mixAmount="));
-        DBLN(mixAmount);
+    if (Button.tapped()) {
+        DBLN(F("Button press: starting transition"));
     }
 
     ledClear(LedData, LedCount);
@@ -86,6 +83,5 @@ void loop()
         mixAdd(BufB, LedData, LedCount, 255-mixAmount);
     }
     ledUpdate();
-    delay(LedRefreshMs);
 }
 
