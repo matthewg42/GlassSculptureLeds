@@ -192,7 +192,7 @@ void loop()
     BrightnessFader.update();
     updateTransition();
 
-    if (Button.tapped()) {
+    if (Button.repeat(50,50)) {
         startTransition();
     }
 
