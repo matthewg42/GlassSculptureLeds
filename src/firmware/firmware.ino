@@ -14,6 +14,7 @@
 #include "EffChase.h"
 #include "EffBlobs.h"
 #include "EffSolid.h"
+#include "EffSparkle.h"
 #include "Palettes.h"
 #include "Config.h"
 
@@ -50,7 +51,7 @@ Effect* nextEffect(uint8_t buffer)
 
 #ifdef CROSSFADE
     if (EffectIndex==0) {
-        effect = new EffSequence(Buffers[buffer], PaletteRed, true);
+        effect = new EffSparkle(Buffers[buffer]);
     } else if (EffectIndex==1) {
         effect = new EffBlobs(Buffers[buffer], ForestColors_p);
     } else if (EffectIndex==2) {
