@@ -54,7 +54,7 @@ Effect* nextEffect(uint8_t buffer)
     if (EffectIndex==0) {
         effect = new EffSpurt(Buffers[buffer], OceanColors_p);
     } else if (EffectIndex==1) {
-        effect = new EffSparkle(Buffers[buffer]);
+        effect = new EffSparkle(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==2) {
         effect = new EffBlobs(Buffers[buffer], ForestColors_p);
     } else if (EffectIndex==3) {
@@ -79,20 +79,26 @@ Effect* nextEffect(uint8_t buffer)
     } else if (EffectIndex==4) {
         effect = new EffChase(Buffers[buffer], PaletteContrast, true);
     } else if (EffectIndex==5) {
-        effect = new EffChase(Buffers[buffer], RainbowColors_p, true);
+        effect = new EffChase(Buffers[buffer], OceanColors_p, true);
     } else if (EffectIndex==6) {
-        effect = new EffBlobs(Buffers[buffer], PaletteContrast);
+        effect = new EffBlobs(Buffers[buffer], ForestColors_p);
     } else if (EffectIndex==7) {
-        effect = new EffBlobs(Buffers[buffer], PaletteGreen);
+        effect = new EffBlobs(Buffers[buffer], LavaColors_p);
     } else if (EffectIndex==8) {
-        effect = new EffBlobs(Buffers[buffer], CloudColors_p);
+        effect = new EffSparkle(Buffers[buffer], CloudColors_p);
+    } else if (EffectIndex==9) {
+        effect = new EffSparkle(Buffers[buffer], RainbowColors_p);
+    } else if (EffectIndex==10) {
+        effect = new EffSpurt(Buffers[buffer], HeatColors_p);
+    } else if (EffectIndex==11) {
+        effect = new EffSpurt(Buffers[buffer], PaletteContrast);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
         effect = NULL;
     }
 
-    EffectIndex = (EffectIndex+1) % 9;
+    EffectIndex = (EffectIndex+1) % 12;
     return effect;
 #endif
 }

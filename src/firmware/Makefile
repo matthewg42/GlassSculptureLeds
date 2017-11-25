@@ -2,8 +2,8 @@
 CPPFLAGS += -Wno-unused-variable -Wno-deprecated-declarations -Wno-cpp -Wno-write-strings
 
 # Add flags for debugging and anything else we might have in our code...
-CPPFLAGS += -DDEBUG -DCROSSFADE -DLEDCOUNT=48 -DFIXEDBRIGHTNESS=128
-#CPPFLAGS += -DDEBUG -DLEDCOUNT=48 -DFIXEDBRIGHTNESS=128
+#CPPFLAGS += -DDEBUG -DCROSSFADE -DLEDCOUNT=48 -DFIXEDBRIGHTNESS=128
+CPPFLAGS += -DDEBUG -DLEDCOUNT=48 -DFIXEDBRIGHTNESS=128
 
 # Each library used should be added here. Use the directory name for the library as
 # installed in your arduino libraries directory
