@@ -48,24 +48,49 @@ Effect* nextEffect(uint8_t buffer)
 {
     Effect* effect = NULL;
 
+#ifdef CROSSFADE
     if (EffectIndex==0) {
-        effect = new EffBlobs(Buffers[buffer], PartyColors_p);
+        effect = new EffSequence(Buffers[buffer], PaletteRed, true);
     } else if (EffectIndex==1) {
-        effect = new EffBlobs(Buffers[buffer], RainbowColors_p);
+        effect = new EffBlobs(Buffers[buffer], ForestColors_p);
     } else if (EffectIndex==2) {
-        effect = new EffBlobs(Buffers[buffer], PaletteRed);
-    } else if (EffectIndex==3) {
-        effect = new EffBlobs(Buffers[buffer], PaletteGreen);
-    } else if (EffectIndex==4) {
-        effect = new EffBlobs(Buffers[buffer], PaletteBlue);
+        effect = new EffChase(Buffers[buffer], PartyColors_p, true);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
         effect = NULL;
     }
 
-    EffectIndex = (EffectIndex+1) % 5;
+    EffectIndex = (EffectIndex+1) % 3;
     return effect;
+#else
+    if (EffectIndex==0) {
+        effect = new EffSequence(Buffers[buffer], PaletteRed, false);
+    } else if (EffectIndex==1) {
+        effect = new EffSequence(Buffers[buffer], PaletteBlue, false);
+    } else if (EffectIndex==2) {
+        effect = new EffSequence(Buffers[buffer], PaletteBlue, true);
+    } else if (EffectIndex==3) {
+        effect = new EffChase(Buffers[buffer], PaletteContrast, false);
+    } else if (EffectIndex==4) {
+        effect = new EffChase(Buffers[buffer], PaletteContrast, true);
+    } else if (EffectIndex==5) {
+        effect = new EffChase(Buffers[buffer], RainbowColors_p, true);
+    } else if (EffectIndex==6) {
+        effect = new EffBlobs(Buffers[buffer], PaletteContrast);
+    } else if (EffectIndex==7) {
+        effect = new EffBlobs(Buffers[buffer], PaletteGreen);
+    } else if (EffectIndex==8) {
+        effect = new EffBlobs(Buffers[buffer], CloudColors_p);
+    } else {
+        DB(F("nextEffect: invalid EffectIndex="));
+        DBLN(EffectIndex);
+        effect = NULL;
+    }
+
+    EffectIndex = (EffectIndex+1) % 9;
+    return effect;
+#endif
 }
 
 #ifdef CROSSFADE
@@ -102,7 +127,7 @@ void startCrossfade()
 
 void updateTransition()
 {
-    float complete = (float)(Millis() - LastTransitionStart) / TransitionMs;;
+    float complete = (float)(Millis() - LastTransitionStart) / TransitionMs;
     switch(BufferState) {
     case AtoB:
         if (complete >= 1.0) {
@@ -222,7 +247,7 @@ void loop()
         MEMFREE;
     }
 
-    if (Button.repeat(50,50)) {
+    if (Button.tapped()) {
 #ifdef CROSSFADE
         startCrossfade();
 #else
@@ -240,7 +265,11 @@ void loop()
         DB(F(" scale8="));
         DB((BrightnessFader.value()*4)-1);
         DB(' ');
+#ifdef FIXEDBRIGHTNESS
+        FastLED.setBrightness(FIXEDBRIGHTNESS);
+#else
         FastLED.setBrightness((BrightnessFader.value()*4)-1);
+#endif
         Brightness = BrightnessFader.value();
         MEMFREE;
     }
