@@ -4,8 +4,6 @@
 #include "EffBlobs.h"
 #include "Config.h"
 
-#define BLOB_SPEED_FACTOR (128./(SpeedFactor < 30 ? 30 : SpeedFactor))
-
 EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
     Effect(ledData),
     _palette(palette),

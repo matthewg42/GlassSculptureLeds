@@ -3,6 +3,8 @@
 #include <FastLED.h>
 #include "Effect.h"
 
+#define BLOB_SPEED_FACTOR (128./(SpeedFactor < 30 ? 30 : SpeedFactor))
+
 struct Blob {
     uint16_t firstPixel;        //!< Where on the strip we will start to draw this blob
     uint16_t fadePixels;        //!< How many pixels to fade in and out
