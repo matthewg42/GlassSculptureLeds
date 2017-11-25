@@ -19,7 +19,8 @@ void EffSpurt::render()
     _fadeCounter += SPURT_SPEED_FACTOR/30;
     if (_fadeCounter > 30) {
         for (uint16_t i=0; i<LedCount; i++) {
-            _ledData[i].subtractFromRGB(1);
+            // _ledData[i].subtractFromRGB(1);
+            _ledData[i].fadeToBlackBy(1);
         }
     }
 
@@ -28,7 +29,7 @@ void EffSpurt::render()
         if (!_spurts[i].isDormant()) {
             _ledData[(uint16_t)_spurts[i].location] += _spurts[i].color;
             _spurts[i].location += _spurts[i].velocity / SPURT_SPEED_FACTOR;
-        } else {
+        } else if (_lastSpawn == 0 || Millis() > _lastSpawn + SpawnDelayMs) {
             _lastSpawn = Millis();
             _spurts[i].location = 0.0;
             _spurts[i].color = ColorFromPalette(_palette, random(256));
