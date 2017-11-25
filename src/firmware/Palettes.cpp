@@ -24,4 +24,10 @@ const TProgmemRGBPalette16 PaletteBlue FL_PROGMEM =
     CRGB::Blue, CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue,
 };
 
-
+const TProgmemRGBPalette16 PaletteContrast FL_PROGMEM =
+{
+    0xFFFF00, 0x330000, 0xFFFF00, 0x003300, 
+    0xFFFF00, 0x000033, 0xFFFF00, 0x330000, 
+    0xFFFF00, 0x003300, 0xFFFF00, 0x000033, 
+    0xFFFF00, 0x330000, 0xFFFF00, 0x003300 
+};
