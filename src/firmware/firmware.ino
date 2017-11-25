@@ -69,15 +69,15 @@ Effect* nextEffect(uint8_t buffer)
     return effect;
 #else
     if (EffectIndex==0) {
-        effect = new EffSequence(Buffers[buffer], PaletteRed, false);
+        effect = new EffSequence(Buffers[buffer], RedColors_p, false);
     } else if (EffectIndex==1) {
-        effect = new EffSequence(Buffers[buffer], PaletteBlue, false);
+        effect = new EffSequence(Buffers[buffer], BlueColors_p, false);
     } else if (EffectIndex==2) {
-        effect = new EffSequence(Buffers[buffer], PaletteBlue, true);
+        effect = new EffSequence(Buffers[buffer], BlueColors_p, true);
     } else if (EffectIndex==3) {
-        effect = new EffChase(Buffers[buffer], PaletteContrast, false);
+        effect = new EffChase(Buffers[buffer], ContrastColors_p, false);
     } else if (EffectIndex==4) {
-        effect = new EffChase(Buffers[buffer], PaletteContrast, true);
+        effect = new EffChase(Buffers[buffer], ContrastColors_p, true);
     } else if (EffectIndex==5) {
         effect = new EffChase(Buffers[buffer], OceanColors_p, true);
     } else if (EffectIndex==6) {
@@ -91,7 +91,7 @@ Effect* nextEffect(uint8_t buffer)
     } else if (EffectIndex==10) {
         effect = new EffSpurt(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==11) {
-        effect = new EffSpurt(Buffers[buffer], PaletteContrast);
+        effect = new EffSpurt(Buffers[buffer], ContrastColors_p);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
