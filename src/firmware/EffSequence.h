@@ -7,7 +7,7 @@
  */
 class EffSequence : public Effect {
 public:
-    static const uint16_t PeriodMs = 50;
+    static const uint16_t PeriodMs = 25;
 
 public:
     EffSequence(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
