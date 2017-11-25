@@ -27,8 +27,8 @@ struct Blob {
  */
 class EffBlobs : public Effect {
 public:
-    static const uint8_t NumberOfEffBlobs = 3;
-    static const uint16_t MinSpawnDelayMs = 500;
+    static const uint8_t Count = 3;
+    static const uint16_t SpawnDelayMs = 500;
 
 public:
     EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette);
@@ -38,7 +38,7 @@ public:
 
 protected:
     const TProgmemRGBPalette16& _palette;
-    Blob _blobs[NumberOfEffBlobs];
+    Blob _blobs[Count];
     uint32_t _lastSpawn;
 
 };

@@ -14,7 +14,7 @@ EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
 
 void EffBlobs::render()
 {
-    if (Millis() > _lastSpawn + BLOB_SPEED_FACTOR*MinSpawnDelayMs || _lastSpawn == 0) {
+    if (Millis() > _lastSpawn + BLOB_SPEED_FACTOR*SpawnDelayMs || _lastSpawn == 0) {
         spawn();
     }
 
@@ -24,7 +24,7 @@ void EffBlobs::render()
     }
     
     // render blobs in additive way
-    for (uint8_t i=0; i<NumberOfEffBlobs; i++) {
+    for (uint8_t i=0; i<Count; i++) {
         renderBlob(_blobs[i]);
     }
 }
@@ -67,7 +67,7 @@ void EffBlobs::renderBlob(Blob& blob)
 
 void EffBlobs::spawn()
 {
-    for (uint8_t i=0; i<NumberOfEffBlobs; i++) {
+    for (uint8_t i=0; i<Count; i++) {
         if (_blobs[i].isDormant()) {
             _lastSpawn = Millis();
             _blobs[i].birthMs = Millis()+1;             // hack to prevent suppression at Millis() == 0
