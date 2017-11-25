@@ -15,6 +15,7 @@
 #include "EffBlobs.h"
 #include "EffSolid.h"
 #include "EffSparkle.h"
+#include "EffSpurt.h"
 #include "Palettes.h"
 #include "Config.h"
 
@@ -51,10 +52,12 @@ Effect* nextEffect(uint8_t buffer)
 
 #ifdef CROSSFADE
     if (EffectIndex==0) {
-        effect = new EffSparkle(Buffers[buffer]);
+        effect = new EffSpurt(Buffers[buffer], OceanColors_p);
     } else if (EffectIndex==1) {
-        effect = new EffBlobs(Buffers[buffer], ForestColors_p);
+        effect = new EffSparkle(Buffers[buffer]);
     } else if (EffectIndex==2) {
+        effect = new EffBlobs(Buffers[buffer], ForestColors_p);
+    } else if (EffectIndex==3) {
         effect = new EffChase(Buffers[buffer], PartyColors_p, true);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
@@ -62,7 +65,7 @@ Effect* nextEffect(uint8_t buffer)
         effect = NULL;
     }
 
-    EffectIndex = (EffectIndex+1) % 3;
+    EffectIndex = (EffectIndex+1) % 4;
     return effect;
 #else
     if (EffectIndex==0) {

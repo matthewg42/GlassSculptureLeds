@@ -21,3 +21,5 @@
 * EEPROM saving of state
 * add sparkle option to modes
 * reset before millis wrap
+* since we are using a global for the LedCount, also use LedData...
+* Spurt fade should be less linear and more eye-compatible
