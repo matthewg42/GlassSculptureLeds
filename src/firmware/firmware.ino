@@ -52,11 +52,11 @@ Effect* nextEffect(uint8_t buffer)
 
 #ifdef CROSSFADE
     if (EffectIndex==0) {
-        effect = new EffSpurt(Buffers[buffer], OceanColors_p);
+        effect = new EffSpurt(Buffers[buffer], ForestColors_p);
     } else if (EffectIndex==1) {
-        effect = new EffSparkle(Buffers[buffer], HeatColors_p);
+        effect = new EffSparkle(Buffers[buffer], OceanColors_p);
     } else if (EffectIndex==2) {
-        effect = new EffBlobs(Buffers[buffer], ForestColors_p);
+        effect = new EffBlobs(Buffers[buffer], RedColors_p);
     } else if (EffectIndex==3) {
         effect = new EffChase(Buffers[buffer], PartyColors_p, true);
     } else {
@@ -79,7 +79,7 @@ Effect* nextEffect(uint8_t buffer)
     } else if (EffectIndex==4) {
         effect = new EffChase(Buffers[buffer], ContrastColors_p, true);
     } else if (EffectIndex==5) {
-        effect = new EffChase(Buffers[buffer], OceanColors_p, true);
+        effect = new EffChase(Buffers[buffer], RainbowColors_p, true);
     } else if (EffectIndex==6) {
         effect = new EffBlobs(Buffers[buffer], ForestColors_p);
     } else if (EffectIndex==7) {
@@ -91,7 +91,9 @@ Effect* nextEffect(uint8_t buffer)
     } else if (EffectIndex==10) {
         effect = new EffSpurt(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==11) {
-        effect = new EffSpurt(Buffers[buffer], ContrastColors_p);
+        effect = new EffSpurt(Buffers[buffer], GreenColors_p);
+    } else if (EffectIndex==12) {
+        effect = new EffSpurt(Buffers[buffer], HeatColors_p);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);

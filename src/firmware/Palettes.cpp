@@ -2,10 +2,10 @@
 
 const TProgmemRGBPalette16 RedColors_p FL_PROGMEM =
 {
-    CRGB::Red, CRGB::OrangeRed, CRGB::Crimson, CRGB::Orange,
-    CRGB::Red, CRGB::OrangeRed, CRGB::Crimson, CRGB::Orange,
-    CRGB::Red, CRGB::OrangeRed, CRGB::Crimson, CRGB::Orange,
-    CRGB::Red, CRGB::OrangeRed, CRGB::Crimson, CRGB::Orange
+    0xFF0000, 0x770000, 0xFF3300, 0x330000,
+    0xFF0000, 0x770000, 0xFF3300, 0x330000,
+    0xFF0000, 0x770000, 0xFF3300, 0x330000,
+    0xFF0000, 0x770000, 0xFF3300, 0x330000
 };
 
 const TProgmemRGBPalette16 GreenColors_p FL_PROGMEM =
