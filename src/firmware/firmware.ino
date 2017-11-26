@@ -240,7 +240,7 @@ void loop()
         MEMFREE;
     }
 
-    if (Button.tapped()) {
+    if (Button.tapped() || random(20000) == 0) {
 #ifdef CROSSFADE
         startCrossfade();
 #else
