@@ -2,15 +2,15 @@
 
 #include "Effect.h"
 
-#define SPARKLE_SPEED_FACTOR ((0.01*(128./SpeedFactor))*(0.01*(128./SpeedFactor))*(0.01*(128./SpeedFactor)))
+#define SPARKLE_SPEED_FACTOR ((float)SpeedFactor*2/255)
 
 /*! \class EffSparkle
  * LED Effect which just fades between the colors in a palette
  */
 class EffSparkle : public Effect {
 public:
-    static const uint16_t UpdateMs = 20;
-    static const uint16_t SparkleAmount = 100;
+    static const uint16_t UpdateMs = 3;
+    static const uint16_t SparkleAmount = 6000;
 
 public:
     EffSparkle(CRGB* ledData, const TProgmemRGBPalette16& palette);

@@ -15,7 +15,9 @@ EffSparkle::EffSparkle(CRGB* ledData, const TProgmemRGBPalette16& palette) :
 
 void EffSparkle::render()
 {
-    if (Millis() < _lastUpdate + (SPARKLE_SPEED_FACTOR*UpdateMs)) {
+    DB(F("sparkle speed: "));
+    DBLN(SPARKLE_SPEED_FACTOR);
+    if (Millis() < _lastUpdate + (UpdateMs/SPARKLE_SPEED_FACTOR)) {
         return;
     }
 
@@ -23,11 +25,11 @@ void EffSparkle::render()
     if (_fadeCounter++ > 3) {
         _fadeCounter = 0;
         for(uint16_t i=0; i<LedCount; i++) {
-            _ledData[i].fadeToBlackBy(1);
+            _ledData[i].fadeToBlackBy(20);
         }
     }
     
-    if (random(LedCount*100/SparkleAmount) == 0) {
+    if (random(LedCount*LedCount/SparkleAmount) == 0) {
         // new sparkle
         uint16_t i = random(LedCount);
         CRGB color = ColorFromPalette(_palette, random(256));
