@@ -16,6 +16,9 @@ const uint16_t      LedRefreshMs =          10;
 
 const uint16_t      TransitionMs =          800;
 
+// Set to 0 for no saving / restoring of default effect
+const uint16_t      EffectPersistenceMs =   5000;
+
 // The mode button
 const uint8_t       ButtonPin =             3;
 const bool          ButtonPullup =          true;

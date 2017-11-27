@@ -1,5 +1,6 @@
 #include <math.h>
 #include <Arduino.h>
+#include <EEPROM.h>
 #include <MutilaDebug.h>
 #include <Millis.h>
 #include <DebouncedButton.h>
@@ -17,6 +18,7 @@
 #include "EffSparkle.h"
 #include "EffSpurt.h"
 #include "Palettes.h"
+#include "Settings.h"
 #include "Config.h"
 
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
@@ -30,7 +32,7 @@ Effect* Effects[2] = { NULL, NULL };    // ...for two effects
 
 typedef enum { None, JustA, JustB, AtoB, BtoA } t_BufferState;
 t_BufferState BufferState = None;       // Keep track of transition state
-uint32_t LastTransitionStart = 0;       // And when it started
+uint32_t LastTransitionStart = 0;       // When transitions/switching starts
 uint8_t MixAmount = 128;                // 0: EffectA@100%, EffectB@0%; 255: EffectA@0%, EffectB@100%
 CRGB LedData[LedCount];                 // Mapped onto our LED strip by FastLED lib
 #else
@@ -40,55 +42,67 @@ CRGB Buffers[1][LedCount];              // This will be rendered directly
 Effect* Effects[1] = { NULL };          // and attached to this effect
 #endif
 
-uint8_t EffectIndex = 0;                // Used to keep track of which effect is next
+// Note: EffectIndex now a PersistentSetting, defined in Settings.cpp
 uint32_t LastLedUpdate = 0;             // Used to control frame rate
+uint32_t LastEffectSelected = 0;        // When the last effect came [fully] on
 uint8_t Brightness = 0;                 // For brightness control by user
+
+const uint8_t NumberOfEffects = 15;     // How many effects are we cycling through?
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
 
-Effect* nextEffect(uint8_t buffer)
+Effect* nextEffect(uint8_t buffer, bool increment=true)
 {
     Effect* effect = NULL;
 
-    if (EffectIndex==0) {
+    if (increment) {
+        EffectIndex = EffectIndex.get() + 1;
+    }
+
+    // wrap and/or deal with bad value from EEPROM
+    EffectIndex = EffectIndex.get() % NumberOfEffects;
+
+    DB(F("EffectIndex="));
+    DBLN(EffectIndex.get());
+
+    if (EffectIndex.get()==0) {
         effect = new EffSequence(Buffers[buffer], HeatColors_p);
-    } else if (EffectIndex==1) {
+    } else if (EffectIndex.get()==1) {
         effect = new EffSequence(Buffers[buffer], RainbowColors_p);
-    } else if (EffectIndex==2) {
+    } else if (EffectIndex.get()==2) {
         effect = new EffSequence(Buffers[buffer], CloudColors_p);
-    } else if (EffectIndex==3) {
+    } else if (EffectIndex.get()==3) {
         effect = new EffBlobs(Buffers[buffer], HeatColors_p);
-    } else if (EffectIndex==4) {
+    } else if (EffectIndex.get()==4) {
         effect = new EffBlobs(Buffers[buffer], RainbowColors_p);
-    } else if (EffectIndex==5) {
+    } else if (EffectIndex.get()==5) {
         effect = new EffBlobs(Buffers[buffer], CloudColors_p);
-    } else if (EffectIndex==6) {
+    } else if (EffectIndex.get()==6) {
         effect = new EffChase(Buffers[buffer], HeatColors_p);
-    } else if (EffectIndex==7) {
+    } else if (EffectIndex.get()==7) {
         effect = new EffChase(Buffers[buffer], RainbowColors_p);
-    } else if (EffectIndex==8) {
+    } else if (EffectIndex.get()==8) {
         effect = new EffChase(Buffers[buffer], CloudColors_p);
-    } else if (EffectIndex==9) {
+    } else if (EffectIndex.get()==9) {
         effect = new EffSpurt(Buffers[buffer], HeatColors_p);
-    } else if (EffectIndex==10) {
+    } else if (EffectIndex.get()==10) {
         effect = new EffSpurt(Buffers[buffer], RainbowColors_p);
-    } else if (EffectIndex==11) {
+    } else if (EffectIndex.get()==11) {
         effect = new EffSpurt(Buffers[buffer], CloudColors_p);
-    } else if (EffectIndex==12) {
+    } else if (EffectIndex.get()==12) {
         effect = new EffSparkle(Buffers[buffer], HeatColors_p);
-    } else if (EffectIndex==13) {
+    } else if (EffectIndex.get()==13) {
         effect = new EffSparkle(Buffers[buffer], RainbowColors_p);
-    } else if (EffectIndex==14) {
+    } else if (EffectIndex.get()==14) {
         effect = new EffSparkle(Buffers[buffer], CloudColors_p);
     } else {
-        DB(F("nextEffect: invalid EffectIndex="));
-        DBLN(EffectIndex);
+        DB(F("ERROR: invalid EffectIndex="));
+        DBLN(EffectIndex.get());
         effect = NULL;
     }
 
     DB(F("Memory during transition: "));
     MEMFREE;
-    EffectIndex = (EffectIndex + 1) % 15;
     return effect;
 }
 
@@ -130,6 +144,7 @@ void updateTransition()
     switch(BufferState) {
     case AtoB:
         if (complete >= 1.0) {
+            LastEffectSelected = Millis();
             MixAmount = 255;
             BufferState = JustB;
             LastTransitionStart = 0;
@@ -145,6 +160,7 @@ void updateTransition()
     case BtoA:
         complete = (float)(Millis() - LastTransitionStart) / TransitionMs;
         if (complete >= 1.0) {
+            LastEffectSelected = Millis();
             MixAmount = 0;
             BufferState = JustA;
             LastTransitionStart = 0;
@@ -180,6 +196,7 @@ void switchEffect()
         delete Effects[0];
         Effects[0] = NULL;
     }
+    LastEffectSelected = Millis();
     Effects[0] = nextEffect(0);
 }
 #endif // end !CROSSFADE
@@ -218,7 +235,7 @@ void setup()
 #endif
 
     // Initial effect state
-    Effects[0] = nextEffect(0);
+    Effects[0] = nextEffect(0, false);
     
     // The analog pins need time to settle.  While this is happening, I call
     // Update on the DiscretePot objects to stabalize their value
@@ -242,6 +259,12 @@ void loop()
         SpeedFactor = speed8;
         DB(F("Speed="));
         DBLN(SpeedFactor);
+    }
+
+    if (LastEffectSelected > 0 && EffectPersistenceMs > 0 && Millis() > LastEffectSelected + EffectPersistenceMs) {
+        DBLN(F("Saving default effect"));
+        LastEffectSelected = 0;
+        EffectIndex.save();
     }
 
 #ifdef CROSSFADE

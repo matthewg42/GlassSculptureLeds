@@ -11,7 +11,7 @@ CPPFLAGS += -DDEBUG -DCROSSFADE -DFIXEDBRIGHTNESS=255
 
 # Each library used should be added here. Use the directory name for the library as
 # installed in your arduino libraries directory
-ARDUINO_LIBS = Mutila FastLED MemoryFree
+ARDUINO_LIBS = Mutila FastLED MemoryFree EEPROM
 
 # Select your board - uncomment as appropriate. I provided just a few
 # common options here.  See the boards.txt file for more.  Some boards
