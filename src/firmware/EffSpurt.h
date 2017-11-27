@@ -3,7 +3,7 @@
 #include "Effect.h"
 #include "Config.h"
 
-#define SPURT_SPEED_FACTOR (0.5*(128./(SpeedFactor < 30 ? 30 : SpeedFactor)))
+#define SPURT_SPEED_FACTOR ((SpeedFactor < 20 ? 20 : SpeedFactor)/128.)
 
 struct SpurtBlob {
     CRGB color;
@@ -20,8 +20,9 @@ struct SpurtBlob {
  */
 class EffSpurt : public Effect {
 public:
-    static const uint8_t Count = 7;
-    static const uint16_t SpawnDelayMs = 800;
+    static const uint8_t Count = 6;
+    static const uint8_t TailLength = 30;
+    static const uint16_t SpawnDelayMs = 600;
     
 public:
     EffSpurt(CRGB* ledData, const TProgmemRGBPalette16& palette);

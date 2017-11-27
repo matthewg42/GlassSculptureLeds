@@ -40,7 +40,7 @@ CRGB Buffers[1][LedCount];              // This will be rendered directly
 Effect* Effects[1] = { NULL };          // and attached to this effect
 #endif
 
-uint8_t EffectIndex = 12;               // Used to keep track of which effect is next
+uint8_t EffectIndex = 0;                // Used to keep track of which effect is next
 uint32_t LastLedUpdate = 0;             // Used to control frame rate
 uint8_t Brightness = 0;                 // For brightness control by user
 
