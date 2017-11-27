@@ -8,7 +8,8 @@ EffSpurt::EffSpurt(CRGB* ledData, const TProgmemRGBPalette16& palette) :
     Effect(ledData),
     _palette(palette),
     _lastSpawn(0),
-    _nextSpawnDelay(0)
+    _nextSpawnDelay(0),
+    _fadeCounter(0)
 {
     DBLN(F("Start EffSpurt"));
 }
