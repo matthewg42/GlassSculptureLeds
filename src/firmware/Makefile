@@ -7,7 +7,7 @@ CPPFLAGS += -Wno-unused-variable -Wno-deprecated-declarations -Wno-cpp -Wno-writ
 # -DFIXEDBRIGHTNESS=255		override brightness control with fixed value
 # -DDEBUG			enable debugging on serial interface
 # -DCROSSFADE			enable crossfade (beware - high memory usage!)
-CPPFLAGS += -DDEBUG -DCROSSFADE -DFIXEDBRIGHTNESS=255
+CPPFLAGS += -DDEBUG -DCROSSFADE 
 
 # Each library used should be added here. Use the directory name for the library as
 # installed in your arduino libraries directory
