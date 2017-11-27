@@ -3,7 +3,7 @@
 #include "Effect.h"
 #include "Config.h"
 
-#define SPURT_SPEED_FACTOR ((SpeedFactor < 20 ? 20 : SpeedFactor)/128.)
+#define SPURT_SPEED_FACTOR (((SpeedFactor < 15 ? 15 : SpeedFactor)/128.))
 
 struct SpurtBlob {
     CRGB color;
@@ -33,6 +33,7 @@ protected:
     SpurtBlob _spurts[Count];
     uint32_t _lastSpawn;
     float _fadeCounter;
+    uint16_t _nextSpawnDelay;
 
 };
 
