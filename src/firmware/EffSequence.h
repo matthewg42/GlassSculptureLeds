@@ -2,6 +2,8 @@
 
 #include "Effect.h"
 
+#define SEQUENCE_SPEED_FACTOR (128./(SpeedFactor < 25 ? 25 : SpeedFactor))
+
 /*! \class EffSequence
  * LED Effect which just fades between the colors in a palette
  */

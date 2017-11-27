@@ -20,7 +20,7 @@ struct SpurtBlob {
  */
 class EffSpurt : public Effect {
 public:
-    static const uint8_t Count = 3;
+    static const uint8_t Count = 7;
     static const uint16_t SpawnDelayMs = 800;
     
 public:

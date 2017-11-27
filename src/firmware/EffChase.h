@@ -3,6 +3,8 @@
 #include <FastLED.h>
 #include "Effect.h"
 
+#define CHASE_SPEED_FACTOR ((128./(SpeedFactor < 25 ? 25 : SpeedFactor)))
+
 /*! \class EffChase
  * LED Effect which sends colors along the strip in a fixed sequence
  */

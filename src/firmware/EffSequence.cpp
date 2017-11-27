@@ -17,7 +17,7 @@ EffSequence::EffSequence(CRGB* ledData, const TProgmemRGBPalette16& palette, boo
 
 void EffSequence::render()
 {
-    if (Millis() > _lastColorChange + ((128./SpeedFactor)*PeriodMs)) {
+    if (Millis() > _lastColorChange + (SEQUENCE_SPEED_FACTOR*PeriodMs)) {
         _lastColorChange = Millis();
         if (_smooth) {
             _hue = _hue+1;

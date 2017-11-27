@@ -40,7 +40,7 @@ CRGB Buffers[1][LedCount];              // This will be rendered directly
 Effect* Effects[1] = { NULL };          // and attached to this effect
 #endif
 
-uint8_t EffectIndex = 0;                // Used to keep track of which effect is next
+uint8_t EffectIndex = 12;               // Used to keep track of which effect is next
 uint32_t LastLedUpdate = 0;             // Used to control frame rate
 uint8_t Brightness = 0;                 // For brightness control by user
 
@@ -51,38 +51,44 @@ Effect* nextEffect(uint8_t buffer)
     Effect* effect = NULL;
 
     if (EffectIndex==0) {
-        effect = new EffSparkle(Buffers[buffer], CloudColors_p);
+        effect = new EffSequence(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==1) {
-        effect = new EffSequence(Buffers[buffer], GreenColors_p, true);
+        effect = new EffSequence(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex==2) {
-        effect = new EffSequence(Buffers[buffer], BlueColors_p, true);
+        effect = new EffSequence(Buffers[buffer], CloudColors_p);
     } else if (EffectIndex==3) {
-        effect = new EffChase(Buffers[buffer], ForestColors_p, false);
+        effect = new EffBlobs(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==4) {
-        effect = new EffChase(Buffers[buffer], OceanColors_p, true);
+        effect = new EffBlobs(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex==5) {
-        effect = new EffChase(Buffers[buffer], RainbowColors_p, true);
+        effect = new EffBlobs(Buffers[buffer], CloudColors_p);
     } else if (EffectIndex==6) {
-        effect = new EffBlobs(Buffers[buffer], ForestColors_p);
+        effect = new EffChase(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==7) {
-        effect = new EffBlobs(Buffers[buffer], LavaColors_p);
+        effect = new EffChase(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex==8) {
-        effect = new EffSequence(Buffers[buffer], RedColors_p, true);
+        effect = new EffChase(Buffers[buffer], CloudColors_p);
     } else if (EffectIndex==9) {
-        effect = new EffSparkle(Buffers[buffer], ForestColors_p);
+        effect = new EffSpurt(Buffers[buffer], HeatColors_p);
     } else if (EffectIndex==10) {
-        effect = new EffSpurt(Buffers[buffer], BlueColors_p);
+        effect = new EffSpurt(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex==11) {
-        effect = new EffSpurt(Buffers[buffer], GreenColors_p);
+        effect = new EffSpurt(Buffers[buffer], CloudColors_p);
     } else if (EffectIndex==12) {
-        effect = new EffSpurt(Buffers[buffer], RedColors_p);
+        effect = new EffSparkle(Buffers[buffer], HeatColors_p);
+    } else if (EffectIndex==13) {
+        effect = new EffSparkle(Buffers[buffer], RainbowColors_p);
+    } else if (EffectIndex==14) {
+        effect = new EffSparkle(Buffers[buffer], CloudColors_p);
     } else {
         DB(F("nextEffect: invalid EffectIndex="));
         DBLN(EffectIndex);
         effect = NULL;
     }
 
-    EffectIndex = (EffectIndex + 1) % 13;
+    DB(F("Memory during transition: "));
+    MEMFREE;
+    EffectIndex = (EffectIndex + 1) % 15;
     return effect;
 }
 
@@ -235,18 +241,18 @@ void loop()
     if (speed8 != SpeedFactor) {
         SpeedFactor = speed8;
         DB(F("Speed="));
-        DB(SpeedFactor);
-        DB(' ');
-        MEMFREE;
+        DBLN(SpeedFactor);
     }
 
-    if (Button.tapped() || random(20000) == 0) {
 #ifdef CROSSFADE
+    if (Button.on()) {
         startCrossfade();
-#else
-        switchEffect();
-#endif
     }
+#else
+    if (Button.tapped()) {
+        switchEffect();
+    }
+#endif
 
 #ifdef CROSSFADE
     updateTransition();
@@ -256,15 +262,13 @@ void loop()
         DB(F("Brightness level="));
         DB(BrightnessFader.value());
         DB(F(" scale8="));
-        DB((BrightnessFader.value()*4)-1);
-        DB(' ');
+        DBLN((BrightnessFader.value()*4)-1);
 #ifdef FIXEDBRIGHTNESS
         FastLED.setBrightness(FIXEDBRIGHTNESS);
 #else
         FastLED.setBrightness((BrightnessFader.value()*4)-1);
 #endif
         Brightness = BrightnessFader.value();
-        MEMFREE;
     }
 
 #ifdef CROSSFADE
