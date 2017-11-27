@@ -1,33 +1,18 @@
 #include "Palettes.h"
 
-const TProgmemRGBPalette16 RedColors_p FL_PROGMEM =
+const TProgmemRGBPalette16 RedOrangeColors_p FL_PROGMEM =
 {
-    0xFF0000, 0x770000, 0xFF3300, 0x330000,
-    0xFF0000, 0x770000, 0xFF3300, 0x330000,
-    0xFF0000, 0x770000, 0xFF3300, 0x330000,
-    0xFF0000, 0x770000, 0xFF3300, 0x330000
+    0xFF0000, 0xFF2400, 0xFF1B17, 0xFF2817,
+    0xFF3310, 0xFF8810, 0xFF6030, 0xFF4015,
+    0xFF0012, 0xFF2217, 0xFF0D05, 0xFF4020,
+    0xFF8026, 0xFF6015, 0xFF4010, 0xFF1403
 };
 
-const TProgmemRGBPalette16 GreenColors_p FL_PROGMEM =
+const TProgmemRGBPalette16 BlueGreenColors_p FL_PROGMEM =
 {
-    0x00FF00, 0x001000, 0x00C000, 0x004000,
-    0x30FF00, 0x041000, 0x20C000, 0x104000,
-    0x00FF30, 0x001004, 0x00C020, 0x004010,
-    0x30FF30, 0x041004, 0x20C020, 0x104010
+    0x0000FF, 0x43BFC7, 0x1589FF, 0x0020C2,
+    0x10FFDB, 0x3B9C9C, 0x4AFF2C, 0x00FFFF, 
+    0x4444FF, 0x5CB3FF, 0x488AC7, 0x1F45FC,
+    0xADDFFF, 0xD5FFFF, 0x44FF44, 0xB6CBE0
 };
 
-const TProgmemRGBPalette16 BlueColors_p FL_PROGMEM =
-{
-    CRGB::Blue, CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue,
-    CRGB::Blue, CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue,
-    CRGB::Blue, CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue,
-    CRGB::Blue, CRGB::DeepSkyBlue, CRGB::CornflowerBlue, CRGB::MidnightBlue,
-};
-
-const TProgmemRGBPalette16 ContrastColors_p FL_PROGMEM =
-{
-    0xFFFF00, 0x330000, 0xFFFF00, 0x003300, 
-    0xFFFF00, 0x000033, 0xFFFF00, 0x330000, 
-    0xFFFF00, 0x003300, 0xFFFF00, 0x000033, 
-    0xFFFF00, 0x330000, 0xFFFF00, 0x003300 
-};

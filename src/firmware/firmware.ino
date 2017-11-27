@@ -66,35 +66,35 @@ Effect* nextEffect(uint8_t buffer, bool increment=true)
     DBLN(EffectIndex.get());
 
     if (EffectIndex.get()==0) {
-        effect = new EffSequence(Buffers[buffer], HeatColors_p);
+        effect = new EffSequence(Buffers[buffer], RedOrangeColors_p);
     } else if (EffectIndex.get()==1) {
-        effect = new EffSequence(Buffers[buffer], RainbowColors_p);
+        effect = new EffSequence(Buffers[buffer], BlueGreenColors_p);
     } else if (EffectIndex.get()==2) {
-        effect = new EffSequence(Buffers[buffer], CloudColors_p);
+        effect = new EffSequence(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex.get()==3) {
-        effect = new EffBlobs(Buffers[buffer], HeatColors_p);
+        effect = new EffBlobs(Buffers[buffer], RedOrangeColors_p);
     } else if (EffectIndex.get()==4) {
-        effect = new EffBlobs(Buffers[buffer], RainbowColors_p);
+        effect = new EffBlobs(Buffers[buffer], BlueGreenColors_p);
     } else if (EffectIndex.get()==5) {
-        effect = new EffBlobs(Buffers[buffer], CloudColors_p);
+        effect = new EffBlobs(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex.get()==6) {
-        effect = new EffChase(Buffers[buffer], HeatColors_p);
+        effect = new EffChase(Buffers[buffer], RedOrangeColors_p);
     } else if (EffectIndex.get()==7) {
-        effect = new EffChase(Buffers[buffer], RainbowColors_p);
+        effect = new EffChase(Buffers[buffer], BlueGreenColors_p);
     } else if (EffectIndex.get()==8) {
-        effect = new EffChase(Buffers[buffer], CloudColors_p);
+        effect = new EffChase(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex.get()==9) {
-        effect = new EffSpurt(Buffers[buffer], HeatColors_p);
+        effect = new EffSpurt(Buffers[buffer], RedOrangeColors_p);
     } else if (EffectIndex.get()==10) {
-        effect = new EffSpurt(Buffers[buffer], RainbowColors_p);
+        effect = new EffSpurt(Buffers[buffer], BlueGreenColors_p);
     } else if (EffectIndex.get()==11) {
-        effect = new EffSpurt(Buffers[buffer], CloudColors_p);
+        effect = new EffSpurt(Buffers[buffer], RainbowColors_p);
     } else if (EffectIndex.get()==12) {
-        effect = new EffSparkle(Buffers[buffer], HeatColors_p);
+        effect = new EffSparkle(Buffers[buffer], RedOrangeColors_p);
     } else if (EffectIndex.get()==13) {
-        effect = new EffSparkle(Buffers[buffer], RainbowColors_p);
+        effect = new EffSparkle(Buffers[buffer], BlueGreenColors_p);
     } else if (EffectIndex.get()==14) {
-        effect = new EffSparkle(Buffers[buffer], CloudColors_p);
+        effect = new EffSparkle(Buffers[buffer], RainbowColors_p);
     } else {
         DB(F("ERROR: invalid EffectIndex="));
         DBLN(EffectIndex.get());
