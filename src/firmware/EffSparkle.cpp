@@ -32,8 +32,8 @@ void EffSparkle::render()
         uint16_t i = random(LedCount);
         CRGB color = ColorFromPalette(_palette, random(256));
         _ledData[i] = color;
-        if (i > 0) _ledData[i-1] = color.scale8(64);
-        if (i < LedCount-1) _ledData[i+1] = color.scale8(128);
+        //if (i > 0) _ledData[i-1] = color.scale8(64);
+        //if (i < LedCount-1) _ledData[i+1] = color.scale8(128);
     }
 
     _lastUpdate = Millis();
