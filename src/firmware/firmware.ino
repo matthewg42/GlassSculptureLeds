@@ -221,6 +221,9 @@ void setup()
 {
     Serial.begin(115200);
 
+    // Seed RNG using noise in analog inputs from our setting pots and A0
+    randomSeed((analogRead(A0)*1024*1024) + (analogRead(BrightnessFaderPin)*1024) + analogRead(SpeedControlPin));
+
     // Init h/w
     Button.begin();
     BrightnessFader.begin(1, 64, true);
