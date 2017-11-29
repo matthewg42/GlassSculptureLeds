@@ -35,6 +35,7 @@ t_BufferState BufferState = None;       // Keep track of transition state
 uint32_t LastTransitionStart = 0;       // When transitions/switching starts
 uint8_t MixAmount = 128;                // 0: EffectA@100%, EffectB@0%; 255: EffectA@0%, EffectB@100%
 CRGB LedData[LedCount];                 // Mapped onto our LED strip by FastLED lib
+uint8_t ButtonTaps = 0;                 // How many button presses do we have to react to?
 #else
 // no crossfade - we render directly into the LedData buffer, so don't need lots
 // of those globals. Save the RAM!
@@ -271,7 +272,13 @@ void loop()
     }
 
 #ifdef CROSSFADE
-    if (Button.on()) {
+    if (Button.tapped() && ButtonTaps < 255) {
+        ButtonTaps++;
+        DB(F("ButtonTaps="));
+        DBLN(ButtonTaps);
+    }
+    if (ButtonTaps > 0 && (BufferState == JustA || BufferState == JustB)) {
+        ButtonTaps--;
         startCrossfade();
     }
 #else
