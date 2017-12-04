@@ -30,5 +30,6 @@
 
 ## Future work
 
-* Reset before millis wrap
-* Watchdog timer
+* Soft reset before millis wrap
+* Spurts in both directions
+* Reverse direction option for Chase
