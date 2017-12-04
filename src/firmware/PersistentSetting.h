@@ -9,15 +9,15 @@ class PersistentSetting {
 public:
     /*! Constructor
      * \param eepromOffset the offset in EEPROM where this setting starts (may be multi-byte)
-     * \param min the minimum value for this setting
-     * \param max the maximum value for this setting
-     * \param def the default value for this setting
+     * \param minimum the minimum value for this setting
+     * \param maximum the maximum value for this setting
+     * \param defaultValue the default value for this setting
      */
-    PersistentSetting(uint16_t eepromOffset, T min, T max, T def) : 
+    PersistentSetting(uint16_t eepromOffset, T minimum, T maximum, T defaultValue) : 
         _eepromOffset(eepromOffset),
-        _min(min),
-        _max(max),
-        _def(def)
+        _minimum(minimum),
+        _maximum(maximum),
+        _defaultValue(defaultValue)
     {
         this->load();
     }
@@ -30,8 +30,8 @@ public:
         for (uint8_t i=0; i<sizeof(T); i++) {
             ptr[i] = EEPROM.read(_eepromOffset+i);
         }
-        if (_value < _min || _value > _max) {
-            _value = _def;
+        if (_value < _minimum || _value > _maximum) {
+            _value = _defaultValue;
         }
         return _value;
     }
@@ -64,7 +64,7 @@ public:
      *  Note: this function does NOT save the new value to EEPROM. To do that, 
      *  save() must be called.
      */
-    T operator=(T v) { if (v >= _min && v<=_max) { _value = v; } return _value; }
+    T operator=(T v) { if (v >= _minimum && v<=_maximum) { _value = v; } return _value; }
 
     /*! Sets the in-RAM value of the setting.
      *  \param v the value to be set. If v is less than the minimum value or 
@@ -73,7 +73,7 @@ public:
      *  Note: this function does NOT save the new value to EEPROM. To do that, 
      *  save() must be called.
      */
-    bool set(T v) { if (v >= _min && v<=_max) { _value = v; return true; } else { return false; } }
+    bool set(T v) { if (v >= _minimum && v<=_maximum) { _value = v; return true; } else { return false; } }
 
     /*! Get the size in bytes of the setting in EEPROM.
      */
@@ -84,8 +84,8 @@ private:
 
 protected:
     T _value;
-    T _min;
-    T _max;
-    T _def;
+    T _minimum;
+    T _maximum;
+    T _defaultValue;
 };
 
