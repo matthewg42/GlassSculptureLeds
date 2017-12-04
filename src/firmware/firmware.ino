@@ -1,5 +1,6 @@
 #include <math.h>
 #include <Arduino.h>
+#include <avr/wdt.h>
 #include <EEPROM.h>
 #include <MutilaDebug.h>
 #include <Millis.h>
@@ -7,6 +8,7 @@
 #include <DiscretePot.h>
 #include <MemoryFree.h>
 #include <FastLED.h>
+#include <SoftwareReset.h>
 #include "Button.h"
 #include "BrightnessFader.h"
 #include "SpeedControl.h"
@@ -23,8 +25,18 @@
 
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
 
-// Global variables ////////////////////////////////////////////////////////////////////////////
+// Function prototypes added by protoize v2.00 at 2017-12-04 12:48:44
+void setup();
+void loop();
+void ledClear(CRGB* dest, uint16_t count);
+void ledUpdate();
+void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale=255);
+Effect* nextEffect(uint8_t buffer, bool increment=true);
+void startCrossfade();
+void switchEffect();
+void updateTransition();
 
+// Global variables ////////////////////////////////////////////////////////////////////////////
 #ifdef CROSSFADE
 // Buffers of color data for rendering our effects 
 CRGB Buffers[2][LedCount];              // Two buffers 
@@ -51,8 +63,112 @@ uint8_t Brightness = 0;                 // For brightness control by user
 const uint8_t NumberOfEffects = 15;     // How many effects are we cycling through?
 
 // Functions ///////////////////////////////////////////////////////////////////////////////////
+void setup()
+{
+    Serial.begin(115200);
 
-Effect* nextEffect(uint8_t buffer, bool increment=true)
+    // Seed RNG using noise in analog inputs from our setting pots and A0
+    randomSeed((analogRead(A0)*1024*1024) + (analogRead(BrightnessFaderPin)*1024) + analogRead(SpeedControlPin));
+
+    // Init h/w
+    Button.begin();
+    BrightnessFader.begin(1, 64, true);
+    SpeedControl.begin(1, 64, true);
+
+#ifdef CROSSFADE
+    FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
+    BufferState = JustA;
+    MixAmount = 0;
+#else
+    FastLED.addLeds<LedChipset, LedPin, LedOrder>(Buffers[0], LedCount);
+#endif
+
+    // Initial effect state
+    Effects[0] = nextEffect(0, false);
+    
+    // The analog pins need time to settle.  While this is happening, I call
+    // Update on the DiscretePot objects to stabalize their value
+    while(Millis() < (500)) {
+        BrightnessFader.update();
+        SpeedControl.update();
+    }
+
+    MEMFREE;
+    DBLN(F("E:setup"));
+}
+
+void loop()
+{
+    Button.update();
+    BrightnessFader.update();
+    SpeedControl.update();
+
+    uint8_t speed8 = (SpeedControl.value()*4)-1;
+    if (speed8 != SpeedFactor) {
+        SpeedFactor = speed8;
+        DB(F("Speed="));
+        DBLN(SpeedFactor);
+    }
+
+    if (LastEffectSelected > 0 && EffectPersistenceMs > 0 && Millis() > LastEffectSelected + EffectPersistenceMs) {
+        DBLN(F("Saving default effect"));
+        LastEffectSelected = 0;
+        EffectIndex.save();
+    }
+
+#ifdef CROSSFADE
+    if (Button.tapped() && ButtonTaps < 255) {
+        ButtonTaps++;
+        DB(F("ButtonTaps="));
+        DBLN(ButtonTaps);
+    }
+    if (ButtonTaps > 0 && (BufferState == JustA || BufferState == JustB)) {
+        ButtonTaps--;
+        startCrossfade();
+    }
+#else
+    if (Button.tapped()) {
+        switchEffect();
+    }
+#endif
+
+#ifdef CROSSFADE
+    updateTransition();
+#endif
+
+    if (BrightnessFader.value() != Brightness) {
+        DB(F("Brightness level="));
+        DB(BrightnessFader.value());
+        DB(F(" scale8="));
+        DBLN((BrightnessFader.value()*4)-1);
+#ifdef FIXEDBRIGHTNESS
+        FastLED.setBrightness(FIXEDBRIGHTNESS);
+#else
+        FastLED.setBrightness((BrightnessFader.value()*4)-1);
+#endif
+        Brightness = BrightnessFader.value();
+    }
+
+#ifdef CROSSFADE
+    // Render it all out
+    ledClear(LedData, LedCount);
+    if (Effects[0]) { 
+        Effects[0]->render(); 
+        mixAdd(Buffers[0], LedData, LedCount, 255-MixAmount);
+    }
+    if (Effects[1]) { 
+        Effects[1]->render(); 
+        mixAdd(Buffers[1], LedData, LedCount, MixAmount);
+    }
+#else
+    if (Effects[0]) { 
+        Effects[0]->render(); 
+    }
+#endif
+    ledUpdate();
+}
+
+Effect* nextEffect(uint8_t buffer, bool increment)
 {
     Effect* effect = NULL;
 
@@ -180,7 +296,7 @@ void updateTransition()
     }
 }
 
-void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale=255) 
+void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale) 
 {
     for(uint16_t i=0; i<count; i++) {
         dest[i] = dest[i].lerp8(src[i], scale);
@@ -216,110 +332,5 @@ void ledUpdate()
         addMillisOffset(LedCount*0.0215);
         LastLedUpdate = Millis();
     }
-}
-
-void setup()
-{
-    Serial.begin(115200);
-
-    // Seed RNG using noise in analog inputs from our setting pots and A0
-    randomSeed((analogRead(A0)*1024*1024) + (analogRead(BrightnessFaderPin)*1024) + analogRead(SpeedControlPin));
-
-    // Init h/w
-    Button.begin();
-    BrightnessFader.begin(1, 64, true);
-    SpeedControl.begin(1, 64, true);
-
-#ifdef CROSSFADE
-    FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);
-    BufferState = JustA;
-    MixAmount = 0;
-#else
-    FastLED.addLeds<LedChipset, LedPin, LedOrder>(Buffers[0], LedCount);
-#endif
-
-    // Initial effect state
-    Effects[0] = nextEffect(0, false);
-    
-    // The analog pins need time to settle.  While this is happening, I call
-    // Update on the DiscretePot objects to stabalize their value
-    while(Millis() < (500)) {
-        BrightnessFader.update();
-        SpeedControl.update();
-    }
-
-    MEMFREE;
-    DBLN(F("E:setup"));
-}
-
-void loop()
-{
-    Button.update();
-    BrightnessFader.update();
-    SpeedControl.update();
-
-    uint8_t speed8 = (SpeedControl.value()*4)-1;
-    if (speed8 != SpeedFactor) {
-        SpeedFactor = speed8;
-        DB(F("Speed="));
-        DBLN(SpeedFactor);
-    }
-
-    if (LastEffectSelected > 0 && EffectPersistenceMs > 0 && Millis() > LastEffectSelected + EffectPersistenceMs) {
-        DBLN(F("Saving default effect"));
-        LastEffectSelected = 0;
-        EffectIndex.save();
-    }
-
-#ifdef CROSSFADE
-    if (Button.tapped() && ButtonTaps < 255) {
-        ButtonTaps++;
-        DB(F("ButtonTaps="));
-        DBLN(ButtonTaps);
-    }
-    if (ButtonTaps > 0 && (BufferState == JustA || BufferState == JustB)) {
-        ButtonTaps--;
-        startCrossfade();
-    }
-#else
-    if (Button.tapped()) {
-        switchEffect();
-    }
-#endif
-
-#ifdef CROSSFADE
-    updateTransition();
-#endif
-
-    if (BrightnessFader.value() != Brightness) {
-        DB(F("Brightness level="));
-        DB(BrightnessFader.value());
-        DB(F(" scale8="));
-        DBLN((BrightnessFader.value()*4)-1);
-#ifdef FIXEDBRIGHTNESS
-        FastLED.setBrightness(FIXEDBRIGHTNESS);
-#else
-        FastLED.setBrightness((BrightnessFader.value()*4)-1);
-#endif
-        Brightness = BrightnessFader.value();
-    }
-
-#ifdef CROSSFADE
-    // Render it all out
-    ledClear(LedData, LedCount);
-    if (Effects[0]) { 
-        Effects[0]->render(); 
-        mixAdd(Buffers[0], LedData, LedCount, 255-MixAmount);
-    }
-    if (Effects[1]) { 
-        Effects[1]->render(); 
-        mixAdd(Buffers[1], LedData, LedCount, MixAmount);
-    }
-#else
-    if (Effects[0]) { 
-        Effects[0]->render(); 
-    }
-#endif
-    ledUpdate();
 }
 
