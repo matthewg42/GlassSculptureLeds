@@ -32,8 +32,8 @@ protected:
     const TProgmemRGBPalette16& _palette;
     SpurtBlob _spurts[Count];
     uint32_t _lastSpawn;
-    float _fadeCounter;
     uint16_t _nextSpawnDelay;
+    float _fadeCounter;
 
 };
 
