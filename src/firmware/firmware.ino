@@ -23,6 +23,7 @@
 #include "Settings.h"
 #include "Config.h"
 
+// Macro to output free memory to serial in a nice readable way
 #define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
 
 // Function prototypes added by protoize v2.00 at 2017-12-04 12:48:44
@@ -94,15 +95,25 @@ void setup()
     }
 
     MEMFREE;
+
+    // If the program hangs for 120ms, reset.
+    // (Tests indicate maximum time between loops is about 20ms)
+    wdt_enable(WDTO_120MS);
+
     DBLN(F("E:setup"));
 }
 
 void loop()
 {
+    // Feed the watchdog
+    wdt_reset();
+
+    // Give timeslice to various components
     Button.update();
     BrightnessFader.update();
     SpeedControl.update();
 
+    // Adjust the speed control global if potential divider value has changed
     uint8_t speed8 = (SpeedControl.value()*4)-1;
     if (speed8 != SpeedFactor) {
         SpeedFactor = speed8;
@@ -110,12 +121,14 @@ void loop()
         DBLN(SpeedFactor);
     }
 
+    // Save the default effect if not already saved and has been selected for a while
     if (LastEffectSelected > 0 && EffectPersistenceMs > 0 && Millis() > LastEffectSelected + EffectPersistenceMs) {
         DBLN(F("Saving default effect"));
         LastEffectSelected = 0;
         EffectIndex.save();
     }
 
+    // Handle the effect change push button
 #ifdef CROSSFADE
     if (Button.tapped() && ButtonTaps < 255) {
         ButtonTaps++;
@@ -136,6 +149,7 @@ void loop()
     updateTransition();
 #endif
 
+    // Adjust the brightness if the brightness potential divider position has changed
     if (BrightnessFader.value() != Brightness) {
         DB(F("Brightness level="));
         DB(BrightnessFader.value());
@@ -149,8 +163,8 @@ void loop()
         Brightness = BrightnessFader.value();
     }
 
+    // Render to the LED strip buffer
 #ifdef CROSSFADE
-    // Render it all out
     ledClear(LedData, LedCount);
     if (Effects[0]) { 
         Effects[0]->render(); 
@@ -165,6 +179,8 @@ void loop()
         Effects[0]->render(); 
     }
 #endif
+
+    // Send LED buffer to LEDs
     ledUpdate();
 }
 
