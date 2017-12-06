@@ -111,14 +111,12 @@ void loop()
     uint8_t speed8 = (SpeedControl.value()*4)-1;
     if (speed8 != SpeedFactor) {
         SpeedFactor = speed8;
-        DB(F("Millis=0x"));
-        DB(Millis(), HEX);
-        DB(F(" Speed="));
+        DB(F("Speed="));
         DBLN(SpeedFactor);
     }
 
     // Save the default effect if not already saved and has been selected for a while
-    if (LastEffectSelected > 0 && EffectPersistenceMs > 0 && Millis() > LastEffectSelected + EffectPersistenceMs) {
+    if (LastEffectSelected > 0 && EffectPersistenceMs > 0 && MillisSince(LastEffectSelected) > EffectPersistenceMs) {
         DBLN(F("Saving default effect"));
         LastEffectSelected = 0;
         EffectIndex.save();
@@ -269,7 +267,7 @@ void startCrossfade()
 
 void updateTransition()
 {
-    float complete = (float)(Millis() - LastTransitionStart) / TransitionMs;
+    float complete = (float)(MillisSince(LastTransitionStart)) / TransitionMs;
     switch(BufferState) {
     case AtoB:
         if (complete >= 1.0) {
@@ -287,7 +285,7 @@ void updateTransition()
         }
         break;
     case BtoA:
-        complete = (float)(Millis() - LastTransitionStart) / TransitionMs;
+        complete = (float)(MillisSince(LastTransitionStart)) / TransitionMs;
         if (complete >= 1.0) {
             LastEffectSelected = Millis();
             MixAmount = 0;
@@ -339,7 +337,7 @@ void ledClear(CRGB* dest, uint16_t count)
 
 void ledUpdate()
 {
-    if (LastLedUpdate == 0 || Millis() > LastLedUpdate + LedRefreshMs) {
+    if (LastLedUpdate == 0 || MillisSince(LastLedUpdate) > LedRefreshMs) {
         FastLED.show();
         addMillisOffset(LedCount*0.0215);
         LastLedUpdate = Millis();
