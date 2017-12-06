@@ -15,7 +15,7 @@ EffSparkle::EffSparkle(CRGB* ledData, const TProgmemRGBPalette16& palette) :
 
 void EffSparkle::render()
 {
-    if (Millis() < _lastUpdate + (UpdateMs/SPARKLE_SPEED_FACTOR)) {
+    if (MillisSince(_lastUpdate) < UpdateMs/SPARKLE_SPEED_FACTOR) {
         return;
     }
 
