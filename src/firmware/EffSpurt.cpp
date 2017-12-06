@@ -29,10 +29,9 @@ void EffSpurt::render()
         if (!_spurts[i].isDormant()) {
             _ledData[(uint16_t)_spurts[i].location] += _spurts[i].color;
             _spurts[i].location += SPURT_SPEED_FACTOR * _spurts[i].velocity;
-        } else if (Millis() > _lastSpawn + (SPURT_SPEED_FACTOR*_nextSpawnDelay)) {
+        } else if (MillisSince(_lastSpawn) > SPURT_SPEED_FACTOR*_nextSpawnDelay) {
             DB(Millis());
             DBLN(F(" Spurt Spawn"));
-            _lastSpawn = Millis();
             _nextSpawnDelay = random(50,1200) / SPURT_SPEED_FACTOR;
             _spurts[i].location = 0;
             _spurts[i].color = ColorFromPalette(_palette, random(256));
