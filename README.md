@@ -33,3 +33,10 @@
 * Handle Millis wrap gracefully
 * Spurts in both directions
 * Reverse direction option for Chase
+
+# Delivery
+
+Production build against:
+
+* Mutila 1.1.0 / 090e296
+*

@@ -7,7 +7,6 @@
 #include <DiscretePot.h>
 #include <MemoryFree.h>
 #include <FastLED.h>
-#include <SoftwareReset.h>
 #include "Button.h"
 #include "BrightnessFader.h"
 #include "SpeedControl.h"
