@@ -36,7 +36,4 @@
 
 # Delivery
 
-Production build against:
-
-* Mutila 1.1.0 / 090e296
-*
+Production releases will be tagged, with library versions in tag comments.
