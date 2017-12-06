@@ -16,9 +16,7 @@ EffChase::EffChase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smoo
 
 void EffChase::render()
 {
-    if (Millis() > _lastShift + (CHASE_SPEED_FACTOR*ShiftPeriodMs)) {
-        _lastShift = Millis();
-
+    if (DoEvery(CHASE_SPEED_FACTOR*ShiftPeriodMs, _lastShift)) {
         // See if it's time to update the color...
         if (!_smooth) {
             if (_pixelCount++ >= ColorLengthPixels) {
