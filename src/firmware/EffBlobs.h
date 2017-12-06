@@ -15,8 +15,8 @@ struct Blob {
     CRGB color;                 //!< The color of the blob at max brightness
 
     Blob() : birthMs(0), color(CRGB::White) {;}
-    bool isDormant() { return birthMs == 0 || Millis() > birthMs+fadeMs+fadeMs+onMs; }
-    uint32_t ageMs() { return isDormant() ? 0 : Millis() - birthMs; }
+    bool isDormant() { return birthMs == 0 || MillisSince(birthMs) > fadeMs + fadeMs + onMs; }
+    uint32_t ageMs() { return isDormant() ? 0 : MillisSince(birthMs); }
 
 };
 

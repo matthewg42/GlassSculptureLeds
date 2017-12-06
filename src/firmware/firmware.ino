@@ -1,6 +1,5 @@
 #include <math.h>
 #include <Arduino.h>
-#include <avr/wdt.h>
 #include <EEPROM.h>
 #include <MutilaDebug.h>
 #include <Millis.h>
@@ -66,6 +65,8 @@ const uint8_t NumberOfEffects = 15;     // How many effects are we cycling throu
 // Functions ///////////////////////////////////////////////////////////////////////////////////
 void setup()
 {
+    // TODO remove after testing
+    addMillisOffset(0xFFFFF000);
     Serial.begin(115200);
 
     // Seed RNG using noise in analog inputs from our setting pots and A0
@@ -96,18 +97,11 @@ void setup()
 
     MEMFREE;
 
-    // If the program hangs for 120ms, reset.
-    // (Tests indicate maximum time between loops is about 20ms)
-    wdt_enable(WDTO_120MS);
-
     DBLN(F("E:setup"));
 }
 
 void loop()
 {
-    // Feed the watchdog
-    wdt_reset();
-
     // Give timeslice to various components
     Button.update();
     BrightnessFader.update();
@@ -117,7 +111,9 @@ void loop()
     uint8_t speed8 = (SpeedControl.value()*4)-1;
     if (speed8 != SpeedFactor) {
         SpeedFactor = speed8;
-        DB(F("Speed="));
+        DB(F("Millis=0x"));
+        DB(Millis(), HEX);
+        DB(F(" Speed="));
         DBLN(SpeedFactor);
     }
 

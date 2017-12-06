@@ -26,6 +26,7 @@ ARDUINO_LIBS = Mutila FastLED MemoryFree EEPROM SoftwareReset
 # the default, so we select the alternative CPU like this:
 BOARD_TAG = nano
 BOARD_SUB = atmega328
+ISP_PROG = usbasp
 #
 # Pro Mini 5V
 #BOARD_TAG = pro

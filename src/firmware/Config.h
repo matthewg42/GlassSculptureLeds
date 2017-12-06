@@ -8,7 +8,9 @@
 #ifdef LEDCOUNT
 const uint16_t      LedCount =              LEDCOUNT;
 #else
-const uint16_t      LedCount =              100;
+// TODO: replace 100 after testing
+//const uint16_t      LedCount =              100;
+const uint16_t      LedCount =              18;
 #endif
 const EOrder        LedOrder =              GRB;
 const uint8_t       LedPin =                4;

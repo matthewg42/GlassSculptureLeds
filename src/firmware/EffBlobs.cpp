@@ -14,7 +14,7 @@ EffBlobs::EffBlobs(CRGB* ledData, const TProgmemRGBPalette16& palette) :
 
 void EffBlobs::render()
 {
-    if (Millis() > _lastSpawn + BLOB_SPEED_FACTOR*SpawnDelayMs || _lastSpawn == 0) {
+    if (MillisSince(_lastSpawn) > BLOB_SPEED_FACTOR*SpawnDelayMs || _lastSpawn == 0) {
         spawn();
     }
 

@@ -30,6 +30,6 @@
 
 ## Future work
 
-* Soft reset before millis wrap
+* Handle Millis wrap gracefully
 * Spurts in both directions
 * Reverse direction option for Chase
