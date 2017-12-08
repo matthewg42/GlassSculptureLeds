@@ -64,8 +64,6 @@ const uint8_t NumberOfEffects = 15;     // How many effects are we cycling throu
 // Functions ///////////////////////////////////////////////////////////////////////////////////
 void setup()
 {
-    // TODO remove after testing
-    addMillisOffset(0xFFFFF000);
     Serial.begin(115200);
 
     // Seed RNG using noise in analog inputs from our setting pots and A0
@@ -338,7 +336,7 @@ void ledUpdate()
 {
     if (LastLedUpdate == 0 || MillisSince(LastLedUpdate) > LedRefreshMs) {
         FastLED.show();
-        addMillisOffset(LedCount*0.0215);
+        AddMillisOffset(LedCount*0.0215);
         LastLedUpdate = Millis();
     }
 }
