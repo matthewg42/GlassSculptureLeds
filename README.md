@@ -22,11 +22,10 @@
 
 ## Dependencies
 
-* Arduino IDE. Build tested with v 
-* FastLED (install through Arduino library manager)
-* SoftwareReset (install through Arduino library manager)
+* Arduino IDE v1.8.5
+* FastLED v3.1.6 (install through Arduino library manager)
+* Mutila v1.1.1 (install using Arduino library manager)
 * MemoryFree (install manually from https://github.com/maniacbug/MemoryFree)
-* Mutila (install manually from https://github.com/matthewg42/Mutila)
 
 ## Future work
 
@@ -37,3 +36,4 @@
 # Delivery
 
 Production releases will be tagged, with library versions in tag comments.
+
