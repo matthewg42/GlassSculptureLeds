@@ -3,16 +3,16 @@
 #include <stdint.h>
 #include <FastLED.h>
 
-#ifndef NOCROSSFADE
+// #defining CROSSFADE will use more memory (limit number of LEDs)
+// but looks pretty swish...
 #define             CROSSFADE               1
-#endif
 
 // Pin definitions
-const uint8_t       LedPin =                4;
-const uint8_t       ButtonPin =             3;
+const uint8_t       LedPin =                A2;
+const uint8_t       ButtonPin =             2;
 const uint8_t       HeartbeatPin =          13;
-const uint8_t       BrightnessFaderPin =    A7;
-const uint8_t       SpeedControlPin =       A6;
+const uint8_t       BrightnessFaderPin =    A4;
+const uint8_t       SpeedControlPin =       A5;
 
 // LED parameters
 #define             LedChipset              WS2812B
