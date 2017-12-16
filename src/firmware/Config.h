@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <FastLED.h>
+#include <Arduino.h>
 
 // #defining CROSSFADE will use more memory (limit number of LEDs)
 // but looks pretty swish...
