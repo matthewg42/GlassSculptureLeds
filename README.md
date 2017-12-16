@@ -28,9 +28,9 @@
 
 ## Future work
 
-* Handle Millis wrap gracefully
 * Spurts in both directions
 * Reverse direction option for Chase
+* Blobs chunk size to fit in LED segments
 
 # Delivery
 
