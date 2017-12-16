@@ -22,7 +22,7 @@
 
 ## Dependencies
 
-* Arduino IDE v1.8.5
+* Arduino IDE v1.8.5 (although other versions will probably work)
 * FastLED v3.1.6 (install through Arduino library manager)
 * Mutila v1.1.1 (install using Arduino library manager)
 * MemoryFree (install manually from https://github.com/maniacbug/MemoryFree)

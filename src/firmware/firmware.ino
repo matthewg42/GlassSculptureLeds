@@ -5,7 +5,7 @@
 #include <Millis.h>
 #include <DebouncedButton.h>
 #include <DiscretePot.h>
-#include <MemoryFree.h>
+#include <FreeRam.h>
 #include <FastLED.h>
 #include "Button.h"
 #include "BrightnessFader.h"
@@ -22,7 +22,7 @@
 #include "Config.h"
 
 // Macro to output free memory to serial in a nice readable way
-#define MEMFREE  do { DB(F("mem=")); DBLN(freeMemory()); } while (0)
+#define MEMFREE  do { DB(F("mem=")); DBLN(FreeRam()); } while (0)
 
 // Function prototypes added by protoize v2.00 at 2017-12-04 12:48:44
 void setup();

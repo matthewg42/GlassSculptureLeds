@@ -3,11 +3,10 @@ CPPFLAGS += -Wno-unused-variable -Wno-deprecated-declarations -Wno-cpp -Wno-writ
 
 # Add flags for debugging and anything else we might have in our code...
 # Build options:
-# -DLEDCOUNT=120		override number of LEDs in Config.h
 # -DFIXEDBRIGHTNESS=255		override brightness control with fixed value
 # -DDEBUG			enable debugging on serial interface
-# -DCROSSFADE			enable crossfade (beware - high memory usage!)
-CPPFLAGS += -DCROSSFADE 
+# -DNOCROSSGADE			if defined, don't use crossfade (saves memory)
+CPPFLAGS += -DDEBUG 
 
 # Each library used should be added here. Use the directory name for the library as
 # installed in your arduino libraries directory
