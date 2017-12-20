@@ -6,6 +6,7 @@
 #include <DebouncedButton.h>
 #include <DiscretePot.h>
 #include <FreeRam.h>
+#include <Heartbeat.h>
 #include <FastLED.h>
 #include "Button.h"
 #include "BrightnessFader.h"
@@ -54,6 +55,8 @@ CRGB Buffers[1][LedCount];              // This will be rendered directly
 Effect* Effects[1] = { NULL };          // and attached to this effect
 #endif
 
+Heartbeat heartbeat(HeartbeatPin);
+
 // Note: EffectIndex now a PersistentSetting, defined in Settings.cpp
 uint32_t LastLedUpdate = 0;             // Used to control frame rate
 uint32_t LastEffectSelected = 0;        // When the last effect came [fully] on
@@ -92,6 +95,8 @@ void setup()
         SpeedControl.update();
     }
 
+    heartbeat.begin();
+    heartbeat.setMode(Heartbeat::Slow);
     MEMFREE;
 
     DBLN(F("E:setup"));
@@ -103,6 +108,7 @@ void loop()
     Button.update();
     BrightnessFader.update();
     SpeedControl.update();
+    heartbeat.update();
 
     // Adjust the speed control global if potential divider value has changed
     uint8_t speed8 = (SpeedControl.value()*4)-1;
@@ -125,6 +131,7 @@ void loop()
         ButtonTaps++;
         DB(F("ButtonTaps="));
         DBLN(ButtonTaps);
+        heartbeat.setMode(Heartbeat::Quick);
     }
     if (ButtonTaps > 0 && (BufferState == JustA || BufferState == JustB)) {
         ButtonTaps--;
@@ -298,7 +305,8 @@ void updateTransition()
         }
         break;
     default:
-        // nothing to do
+        // We've stopped transitioning now, lets indicate that with the heatrbeat
+        heartbeat.setMode(Heartbeat::Slow);
         break;
     }
 }
