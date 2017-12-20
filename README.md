@@ -31,6 +31,7 @@
 * Spurts in both directions
 * Reverse direction option for Chase
 * Blobs chunk size to fit in LED segments
+* Wear levelling for effect persistence
 
 # Delivery
 
