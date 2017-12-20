@@ -71,8 +71,8 @@ void setup()
 
     // Init h/w
     Button.begin();
-    BrightnessFader.begin(1, 64, true);
-    SpeedControl.begin(1, 64, true);
+    BrightnessFader.begin(1, 64, BrightnessFaderInvert);
+    SpeedControl.begin(1, 64, SpeedControlInvert);
 
 #ifdef CROSSFADE
     FastLED.addLeds<LedChipset, LedPin, LedOrder>(LedData, LedCount);

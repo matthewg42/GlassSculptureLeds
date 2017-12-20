@@ -13,7 +13,9 @@ const uint8_t       LedPin =                A2;
 const uint8_t       ButtonPin =             2;
 const uint8_t       HeartbeatPin =          13;
 const uint8_t       BrightnessFaderPin =    A4;
+const bool          BrightnessFaderInvert = false;
 const uint8_t       SpeedControlPin =       A5;
+const bool          SpeedControlInvert =    false;
 
 // LED parameters
 #define             LedChipset              WS2812B
