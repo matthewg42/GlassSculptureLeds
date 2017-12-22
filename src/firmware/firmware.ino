@@ -55,7 +55,9 @@ CRGB Buffers[1][LedCount];              // This will be rendered directly
 Effect* Effects[1] = { NULL };          // and attached to this effect
 #endif
 
+#ifdef HEARTBEAT
 Heartbeat heartbeat(HeartbeatPin);
+#endif
 
 // Note: EffectIndex now a PersistentSetting, defined in Settings.cpp
 uint32_t LastLedUpdate = 0;             // Used to control frame rate
@@ -95,8 +97,11 @@ void setup()
         SpeedControl.update();
     }
 
+#ifdef HEARTBEAT
     heartbeat.begin();
     heartbeat.setMode(Heartbeat::Slow);
+#endif
+
     MEMFREE;
 
     DBLN(F("E:setup"));
@@ -108,7 +113,9 @@ void loop()
     Button.update();
     BrightnessFader.update();
     SpeedControl.update();
+#ifdef HEARTBEAT
     heartbeat.update();
+#endif
 
     // Adjust the speed control global if potential divider value has changed
     uint8_t speed8 = (SpeedControl.value()*4)-1;
@@ -131,7 +138,9 @@ void loop()
         ButtonTaps++;
         DB(F("ButtonTaps="));
         DBLN(ButtonTaps);
+#ifdef HEARTBEAT
         heartbeat.setMode(Heartbeat::Quick);
+#endif
     }
     if (ButtonTaps > 0 && (BufferState == JustA || BufferState == JustB)) {
         ButtonTaps--;
@@ -306,7 +315,9 @@ void updateTransition()
         break;
     default:
         // We've stopped transitioning now, lets indicate that with the heatrbeat
+#ifdef HEARTBEAT
         heartbeat.setMode(Heartbeat::Slow);
+#endif
         break;
     }
 }
