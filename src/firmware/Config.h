@@ -6,7 +6,7 @@
 
 // #defining CROSSFADE will use more memory (limit number of LEDs)
 // but looks pretty swish...
-#define             CROSSFADE               1
+//#define             CROSSFADE               1
 
 // Pin definitions
 const uint8_t       LedPin =                A2;
