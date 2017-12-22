@@ -5,6 +5,7 @@ CPPFLAGS += -Wno-unused-variable -Wno-deprecated-declarations -Wno-cpp -Wno-writ
 # Build options:
 # -DFIXEDBRIGHTNESS=255		override brightness control with fixed value
 # -DDEBUG			enable debugging on serial interface
+# -DHEARTBEAT			enable heartbeat
 CPPFLAGS += -DDEBUG 
 
 # Each library used should be added here. Use the directory name for the library as
