@@ -11,7 +11,7 @@
 class EffChase : public Effect {
 public:
     static const uint16_t ShiftPeriodMs = 30;
-    static const uint8_t ColorLengthPixels = 10;
+    static const uint8_t ColorLengthPixels = 30;
 
 public:
     EffChase(CRGB* ledData, const TProgmemRGBPalette16& palette, bool smooth=true);
