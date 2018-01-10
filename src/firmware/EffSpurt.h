@@ -11,7 +11,7 @@ struct SpurtBlob {
     float location;
 
     SpurtBlob() : location(LedCount) {;}
-    bool isDormant() { return location > LedCount-1; }
+    bool isDormant() { return location > LedCount-1 || location < 0; }
 
 };
 

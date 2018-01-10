@@ -35,9 +35,17 @@ void EffSpurt::render()
                 DB(Millis());
                 DBLN(F(" Spurt Spawn"));
                 _nextSpawnDelay = random(50,1200) / SPURT_SPEED_FACTOR;
-                _spurts[i].location = 0;
-                _spurts[i].color = ColorFromPalette(_palette, random(256));
                 _spurts[i].velocity = 6*(random(20,200) / 1600.);
+                if (random()%2 == 0) {
+                    DBLN(F("normal spurt spawn"));
+                    _spurts[i].location = 0;
+                } else {
+                    DBLN(F("reverse spurt spawn"));
+                    _spurts[i].velocity *= -1;
+                    _spurts[i].location = LedCount-1;
+                }
+                _spurts[i].color = ColorFromPalette(_palette, random(256));
+                
             }
         }
     }
