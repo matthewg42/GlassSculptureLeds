@@ -21,6 +21,7 @@ protected:
     uint32_t _lastColorChange;
     uint8_t _chunkCounter;
     float _hue;
+    bool _hasDisplayed;
 
 };
 

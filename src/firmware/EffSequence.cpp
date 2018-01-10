@@ -10,14 +10,16 @@ EffSequence::EffSequence(CRGB* ledData, const TProgmemRGBPalette16& palette, boo
     _smooth(smooth),
     _lastColorChange(0),
     _chunkCounter(0),
-    _hue(0)
+    _hue(0),
+    _hasDisplayed(false)
 {
     DBLN(F("Start EffSequence"));
 }
 
 void EffSequence::render()
 {
-    if (DoEvery(SEQUENCE_SPEED_FACTOR*PeriodMs, _lastColorChange)) {
+    if (SpeedFactor > 3 && DoEvery(SEQUENCE_SPEED_FACTOR*PeriodMs, _lastColorChange) || !_hasDisplayed) {
+        _hasDisplayed = true;
         if (_smooth) {
             _hue = _hue+1;
         } else {
