@@ -33,7 +33,7 @@ void ledUpdate();
 void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale=255);
 Effect* nextEffect(uint8_t buffer, bool increment=true);
 void startCrossfade();
-void switchEffect();
+void switchEffect(bool reset=false);
 void updateTransition();
 
 // Global variables ////////////////////////////////////////////////////////////////////////////
@@ -147,7 +147,10 @@ void loop()
         startCrossfade();
     }
 #else
-    if (Button.tapped()) {
+    uint16_t tapped = Button.tapped();
+    if (tapped > 1000) {
+        switchEffect(true);
+    } else if (tapped) {
         switchEffect();
     }
 #endif
@@ -330,7 +333,7 @@ void mixAdd(CRGB* src, CRGB* dest, uint16_t count, uint8_t scale)
 }
 
 #else  // end CROSSFADE
-void switchEffect()
+void switchEffect(bool reset)
 {
     // for switchEffect, we just just slot A, deleting any existing effect before 
     // starting the next one
@@ -340,6 +343,12 @@ void switchEffect()
         Effects[0] = NULL;
     }
     LastEffectSelected = Millis();
+
+    if (reset) {
+        // set us to wrap to first effect
+        DBLN(F("resetting to first effect"));
+        EffectIndex = NumberOfEffects;
+    }
     Effects[0] = nextEffect(0);
 }
 #endif // end !CROSSFADE
