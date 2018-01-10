@@ -347,7 +347,7 @@ void switchEffect(bool reset)
     if (reset) {
         // set us to wrap to first effect
         DBLN(F("resetting to first effect"));
-        EffectIndex = NumberOfEffects;
+        EffectIndex = NumberOfEffects - 1;
     }
     Effects[0] = nextEffect(0);
 }
