@@ -21,7 +21,7 @@ const bool          SpeedControlInvert =    false;
 #define             LedChipset              WS2812B
 const uint16_t      LedCount =              100;
 const EOrder        LedOrder =              GRB;
-const uint16_t      LedRefreshMs =          10;
+const uint16_t      LedRefreshMs =          5;
 
 // Crossfade duration
 const uint16_t      TransitionMs =          800;
