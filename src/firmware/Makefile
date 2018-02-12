@@ -6,7 +6,7 @@ CPPFLAGS += -Wno-unused-variable -Wno-deprecated-declarations -Wno-cpp -Wno-writ
 # -DFIXEDBRIGHTNESS=255		override brightness control with fixed value
 # -DDEBUG			enable debugging on serial interface
 # -DHEARTBEAT			enable heartbeat
-CPPFLAGS += -DDEBUG 
+#CPPFLAGS += -DDEBUG 
 
 # Each library used should be added here. Use the directory name for the library as
 # installed in your arduino libraries directory

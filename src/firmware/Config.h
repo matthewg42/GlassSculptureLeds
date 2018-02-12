@@ -19,7 +19,7 @@ const bool          SpeedControlInvert =    false;
 
 // LED parameters
 #define             LedChipset              WS2812B
-const uint16_t      LedCount =              100;
+const uint16_t      LedCount =              200;
 const EOrder        LedOrder =              GRB;
 const uint16_t      LedRefreshMs =          5;
 

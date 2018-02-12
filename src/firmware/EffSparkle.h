@@ -2,7 +2,7 @@
 
 #include "Effect.h"
 
-#define SPARKLE_SPEED_FACTOR ((((float)(SpeedFactor < 20 ? 20 : SpeedFactor))*0.5)/255)
+#define SPARKLE_SPEED_FACTOR ((((float)(SpeedFactor < 20 ? 20 : SpeedFactor))*1.5)/255)
 
 /*! \class EffSparkle
  * LED Effect which just fades between the colors in a palette
